@@ -1,0 +1,43 @@
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
+import { useState } from "react";
+import UserListQuery from "./components/dashboard";
+import Navbar from "./components/nav-bar";
+import { ThemeProvider } from "./contexts/theme-provider";
+import SearchBar from "./components/search-bar";
+import AccountsTable from "./components/accounts-table";
+
+const createApolloClient = () => {
+  return new ApolloClient({
+    link: new HttpLink({
+      uri: "http://localhost:8080/v1/graphql",
+      headers: {
+        "X-Hasura-Admin-Secret": "myadminsecretkey",
+      },
+    }),
+    cache: new InMemoryCache(),
+  });
+};
+
+function App() {
+  const [client] = useState(createApolloClient());
+
+  return (
+    <ApolloProvider client={client}>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <div className="w-screen h-screen">
+          <Navbar />
+          <SearchBar />
+          <UserListQuery />
+          <AccountsTable />
+        </div>
+      </ThemeProvider>
+    </ApolloProvider>
+  );
+}
+
+export default App;
