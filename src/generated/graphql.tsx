@@ -30033,25 +30033,31 @@ export type VersionsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type UserOverviewFragment = { __typename?: 'Users', id: any, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> };
+export type UserOverviewFragment = { __typename?: 'Users', id: any, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: any, lastSignInAt?: any | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> };
 
 export type UserDataByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
 
 
-export type UserDataByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: any, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> }> };
+export type UserDataByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: any, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: any, lastSignInAt?: any | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> }> };
 
 export type UserDataByIdQueryVariables = Exact<{
   userId: Scalars['uuid']['input'];
 }>;
 
 
-export type UserDataByIdQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: any, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> }> };
+export type UserDataByIdQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: any, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: any, lastSignInAt?: any | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> }> };
 
 export const UserOverviewFragmentDoc = gql`
     fragment UserOverview on Users {
   id
+  email
+  firstName
+  lastName
+  profilePictureUrl
+  createdAt
+  lastSignInAt
   accountUsers {
     account {
       id

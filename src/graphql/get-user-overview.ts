@@ -3,6 +3,12 @@ import { gql } from "@apollo/client";
 const USER_OVERVIEW_FRAGMENT = gql`
   fragment UserOverview on Users {
     id
+    email
+    firstName
+    lastName
+    profilePictureUrl
+    createdAt
+    lastSignInAt
     accountUsers {
       account {
         id

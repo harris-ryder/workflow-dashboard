@@ -7,8 +7,9 @@ import {
 import { useState } from "react";
 import Navbar from "./components/nav-bar";
 import SearchBar from "./components/search-bar";
-import { TablesContainer } from "./components/tables-container.tsx/tables-container";
+import { DataViewer } from "./components/data-viewer/data-viewer";
 import { ThemeProvider } from "./contexts/theme-provider";
+import { SettingsProvider } from "./contexts/settings-provider";
 
 const createApolloClient = () => {
   return new ApolloClient({
@@ -28,11 +29,13 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <div className="w-screen h-screen">
-          <Navbar />
-          <SearchBar />
-          <TablesContainer />
-        </div>
+        <SettingsProvider>
+          <div className="w-screen h-screen">
+            <Navbar />
+            <SearchBar />
+            <DataViewer />
+          </div>
+        </SettingsProvider>
       </ThemeProvider>
     </ApolloProvider>
   );

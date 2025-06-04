@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ModeToggle } from "../ui/mode-toggle";
+import { GenericToggle } from "../ui/mode-toggle";
 import { Button } from "../ui/shadcn-primitives/button";
 import { Input } from "../ui/shadcn-primitives/input";
 import { CornerDownLeft } from "lucide-react";
@@ -7,9 +7,9 @@ import { CornerDownLeft } from "lucide-react";
 const SearchBar: React.FC = () => {
   const [mode, setMode] = useState("User ID");
   return (
-    <div className="navbar w-full flex justify-start items-center p-4 gap-2">
-      <ModeToggle
-        options={["User ID", "User Email", "Account ID"]}
+    <div className="navbar w-full flex justify-start p-4 items-center gap-2">
+      <GenericToggle
+        options={["User ID", "User Email"]}
         value={mode}
         onChange={setMode}
       />

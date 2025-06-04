@@ -8,19 +8,25 @@ import {
   DropdownMenuTrigger,
 } from "./shadcn-primitives/dropdown-menu";
 
-interface ToggleProps {
-  options: string[];
-  value: string;
-  onChange: (value: string) => void;
+interface ToggleProps<T extends string> {
+  options: T[];
+  value: T;
+  onChange: (value: T) => void;
+  variant?: "outline" | "ghost" | "default";
 }
 
-export function ModeToggle({ options, value, onChange }: ToggleProps) {
+export function GenericToggle<T extends string>({
+  options,
+  value,
+  onChange,
+  variant = "outline",
+}: ToggleProps<T>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button variant={variant}>
           <span className="text-sm">{value}</span>
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="!w-3 !h-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
