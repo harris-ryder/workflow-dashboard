@@ -6,38 +6,47 @@ import {
 } from "@apollo/client";
 import { useState } from "react";
 import Navbar from "./components/nav-bar";
-import SearchBar from "./components/search-bar";
-import { DataViewer } from "./components/data-viewer/data-viewer";
+import {
+  type EnvironmentConfig,
+  SettingsProvider,
+  useSettings,
+} from "./contexts/settings-provider";
 import { ThemeProvider } from "./contexts/theme-provider";
-import { SettingsProvider } from "./contexts/settings-provider";
+import SearchUser from "./components/search-user/search-user";
 
-const createApolloClient = () => {
+const createApolloClient = (config: EnvironmentConfig) => {
   return new ApolloClient({
     link: new HttpLink({
-      uri: "http://localhost:8080/v1/graphql",
+      uri: config.uri,
       headers: {
-        "X-Hasura-Admin-Secret": "myadminsecretkey",
+        "X-Hasura-Admin-Secret": config.adminSecret,
       },
     }),
     cache: new InMemoryCache(),
   });
 };
 
-function App() {
-  const [client] = useState(createApolloClient());
+function AppContent() {
+  const { environment, settings } = useSettings();
+  const [client] = useState(() => createApolloClient(settings[environment]));
 
   return (
     <ApolloProvider client={client}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <SettingsProvider>
-          <div className="w-screen h-screen">
-            <Navbar />
-            <SearchBar />
-            <DataViewer />
-          </div>
-        </SettingsProvider>
+        <div className="w-screen h-screen">
+          <Navbar />
+          <SearchUser />
+        </div>
       </ThemeProvider>
     </ApolloProvider>
+  );
+}
+
+function App() {
+  return (
+    <SettingsProvider>
+      <AppContent />
+    </SettingsProvider>
   );
 }
 

@@ -1,22 +1,3 @@
-"use client";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../../ui/shadcn-primitives/table";
-import { useState } from "react";
-import { Input } from "../../../ui/shadcn-primitives/input";
-import {
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenu } from "../../../ui/shadcn-primitives/dropdown-menu";
-import { Button } from "../../../ui/shadcn-primitives/button";
 import {
   flexRender,
   getCoreRowModel,
@@ -26,6 +7,23 @@ import {
   type ColumnFiltersState,
   type VisibilityState,
 } from "@tanstack/react-table";
+import { useState } from "react";
+import { Input } from "../../../../../../ui/shadcn-primitives/input";
+import { Button } from "../../../../../../ui/shadcn-primitives/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../../../../ui/shadcn-primitives/table";
+import { Table } from "../../../../../../ui/shadcn-primitives/table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

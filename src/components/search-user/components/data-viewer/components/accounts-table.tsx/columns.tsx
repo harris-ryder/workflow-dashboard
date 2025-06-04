@@ -1,17 +1,15 @@
-"use client";
-
-import { type ColumnDef } from "@tanstack/react-table";
-import type { FormattedOverviewItem } from "../../../api-hooks/use-overview";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-} from "../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuContent } from "../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuLabel } from "../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuItem } from "../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuSeparator } from "../../../ui/shadcn-primitives/dropdown-menu";
-import { Button } from "../../../ui/shadcn-primitives/button";
 import { MoreHorizontal } from "lucide-react";
+import {
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { DropdownMenuLabel } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { DropdownMenuContent } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { DropdownMenuTrigger } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { DropdownMenu } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { Button } from "../../../../../../ui/shadcn-primitives/button";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { FormattedOverviewItem } from "../../../../../../api-hooks/use-overview";
 
 export const columns: ColumnDef<FormattedOverviewItem>[] = [
   {

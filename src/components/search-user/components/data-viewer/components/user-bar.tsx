@@ -1,11 +1,11 @@
 import React from "react";
-import type { UserData } from "../api-hooks/use-overview";
+import { Dot } from "lucide-react";
+import type { UserData } from "../../../../../api-hooks/use-overview";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../ui/shadcn-primitives/avatar";
-import { Dot } from "lucide-react";
+} from "../../../../../ui/shadcn-primitives/avatar";
 
 interface UserBarProps {
   userData?: UserData;

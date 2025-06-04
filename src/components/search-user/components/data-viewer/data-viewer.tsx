@@ -1,7 +1,7 @@
-import { useOverview } from "../../api-hooks/use-overview";
-import UserBar from "../user-bar";
-import { columns } from "./accounts-table.tsx/columns";
-import { DataTable } from "./accounts-table.tsx/data-table";
+import UserBar from "./components/user-bar";
+import { columns } from "./components/accounts-table.tsx/columns";
+import { DataTable } from "./components/accounts-table.tsx/data-table";
+import { useOverview } from "../../../../api-hooks/use-overview";
 
 export const DataViewer = () => {
   const { loading, error, data } = useOverview({

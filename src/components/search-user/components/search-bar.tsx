@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { GenericToggle } from "../ui/mode-toggle";
-import { Button } from "../ui/shadcn-primitives/button";
-import { Input } from "../ui/shadcn-primitives/input";
+import { GenericToggle } from "../../../ui/mode-toggle";
+import { Button } from "../../../ui/shadcn-primitives/button";
+import { Input } from "../../../ui/shadcn-primitives/input";
 import { CornerDownLeft } from "lucide-react";
 
 const SearchBar: React.FC = () => {
