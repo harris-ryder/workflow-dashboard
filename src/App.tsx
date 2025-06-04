@@ -5,11 +5,9 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { useState } from "react";
-import UserListQuery from "./components/dashboard";
 import Navbar from "./components/nav-bar";
-import { ThemeProvider } from "./contexts/theme-provider";
 import SearchBar from "./components/search-bar";
-import AccountsTable from "./components/accounts-table";
+import { ThemeProvider } from "./contexts/theme-provider";
 
 const createApolloClient = () => {
   return new ApolloClient({
@@ -32,8 +30,6 @@ function App() {
         <div className="w-screen h-screen">
           <Navbar />
           <SearchBar />
-          <UserListQuery />
-          <AccountsTable />
         </div>
       </ThemeProvider>
     </ApolloProvider>
