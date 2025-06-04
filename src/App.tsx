@@ -7,6 +7,7 @@ import {
 import { useState } from "react";
 import Navbar from "./components/nav-bar";
 import SearchBar from "./components/search-bar";
+import { TablesContainer } from "./components/tables-container.tsx/tables-container";
 import { ThemeProvider } from "./contexts/theme-provider";
 
 const createApolloClient = () => {
@@ -30,6 +31,7 @@ function App() {
         <div className="w-screen h-screen">
           <Navbar />
           <SearchBar />
+          <TablesContainer />
         </div>
       </ThemeProvider>
     </ApolloProvider>
