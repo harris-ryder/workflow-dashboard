@@ -71,10 +71,6 @@ export function SettingsProvider({
     setEnvironment,
   };
 
-  useEffect(() => {
-    console.log(settings);
-  }, [settings]);
-
   return (
     <SettingsProviderContext.Provider {...props} value={value}>
       {children}

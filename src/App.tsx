@@ -4,7 +4,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/nav-bar";
 import {
   type EnvironmentConfig,
@@ -28,7 +28,13 @@ const createApolloClient = (config: EnvironmentConfig) => {
 
 function AppContent() {
   const { environment, settings } = useSettings();
-  const [client] = useState(() => createApolloClient(settings[environment]));
+  const [client, setClient] = useState(() =>
+    createApolloClient(settings[environment])
+  );
+
+  useEffect(() => {
+    setClient(createApolloClient(settings[environment]));
+  }, [environment, settings]);
 
   return (
     <ApolloProvider client={client}>

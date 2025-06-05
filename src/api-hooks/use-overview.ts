@@ -46,10 +46,6 @@ export type FormattedOverviewItem = {
 };
 
 export const useOverview = ({ userId, email }: UseOverviewProps) => {
-  if (!userId && !email) {
-    throw new Error("Either 'id' or 'email' must be provided.");
-  }
-
   const query = userId ? GET_USER_OVERVIEW_BY_ID : GET_USER_OVERVIEW_BY_EMAIL;
   const variables = userId ? { userId: userId } : { email };
 
@@ -91,8 +87,6 @@ export const useOverview = ({ userId, email }: UseOverviewProps) => {
       }))
     )
   ) as FormattedOverviewItem[] | undefined;
-
-  console.log("overview", formattedOverview);
 
   return { loading, error, data: { userData, formattedOverview } };
 };
