@@ -1,12 +1,7 @@
-import { useQuery } from "@apollo/client";
-import type {
-  UserDataByEmailQuery,
-  UserDataByIdQuery,
-} from "../generated/graphql";
 import {
-  GET_USER_OVERVIEW_BY_EMAIL,
-  GET_USER_OVERVIEW_BY_ID,
-} from "../graphql/get-user-overview";
+  useUserDataByEmailQuery,
+  type UserDataByEmailQuery,
+} from "../generated/graphql";
 
 type UseOverviewProps = {
   userId?: string;
@@ -46,13 +41,10 @@ export type FormattedOverviewItem = {
 };
 
 export const useOverview = ({ userId, email }: UseOverviewProps) => {
-  const query = userId ? GET_USER_OVERVIEW_BY_ID : GET_USER_OVERVIEW_BY_EMAIL;
-  const variables = userId ? { userId: userId } : { email };
-
-  const { loading, error, data } = useQuery<
-    UserDataByEmailQuery | UserDataByIdQuery
-  >(query, {
-    variables,
+  const { loading, error, data } = useUserDataByEmailQuery({
+    variables: {
+      email: email ?? "",
+    },
   });
 
   const overview = data?.users?.[0]?.accountUsers;
