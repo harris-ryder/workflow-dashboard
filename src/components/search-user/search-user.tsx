@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import SearchBar from "./components/search-bar";
 import { DataViewer } from "./components/data-viewer/data-viewer";
 import { useOverview } from "../../api-hooks/use-overview";
+import { useSettings } from "../../contexts/settings-provider";
 
 export type SearchType = "userId" | "userEmail";
 export const SEARCH_OPTIONS: SearchType[] = ["userEmail", "userId"];
 
 const SearchUser: React.FC = () => {
+  const { environmentConfig } = useSettings();
   const [search, setSearch] = useState("");
   const [searchType, setSearchType] = useState<SearchType>("userEmail");
 
   const { loading, error, data } = useOverview({
-    userId: searchType === "userId" ? search : undefined,
-    email: searchType === "userEmail" ? search : undefined,
+    customerId: searchType === "userId" ? search : undefined,
+    customerEmail: searchType === "userEmail" ? search : undefined,
+    myUserEmail: environmentConfig.myUserEmail,
   });
 
   return (
@@ -27,7 +30,12 @@ const SearchUser: React.FC = () => {
       />
       {loading && <div>Loading...</div>}
       {!loading && error && <div>Error: {error.message}</div>}
-      {!loading && !error && data && <DataViewer data={data} />}
+      {!loading && !error && data && (
+        <DataViewer
+          customerUserData={data.customerUserData}
+          customerDocumentData={data.customerDocumentData}
+        />
+      )}
     </div>
   );
 };

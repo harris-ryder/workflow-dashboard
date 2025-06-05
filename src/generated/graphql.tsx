@@ -20,10 +20,10 @@ export type Scalars = {
   float8: { input: any; output: any; }
   json: { input: any; output: any; }
   jsonb: { input: any; output: any; }
-  numeric: { input: any; output: any; }
-  timestamp: { input: any; output: any; }
-  timestamptz: { input: any; output: any; }
-  uuid: { input: any; output: any; }
+  numeric: { input: number; output: number; }
+  timestamp: { input: string; output: string; }
+  timestamptz: { input: string; output: string; }
+  uuid: { input: string; output: string; }
 };
 
 /** Defines the status of the invoice. Enum table for Hasura. */
@@ -30033,21 +30033,28 @@ export type VersionsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type UserOverviewFragment = { __typename?: 'Users', id: any, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: any, lastSignInAt?: any | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> };
+export type UserAccountsQueryVariables = Exact<{
+  email?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UserAccountsQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string } }> }> };
+
+export type UserOverviewFragment = { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> };
 
 export type UserDataByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
 
 
-export type UserDataByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: any, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: any, lastSignInAt?: any | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> }> };
+export type UserDataByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> }> };
 
 export type UserDataByIdQueryVariables = Exact<{
   userId: Scalars['uuid']['input'];
 }>;
 
 
-export type UserDataByIdQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: any, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: any, lastSignInAt?: any | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: any, name: string, projects: Array<{ __typename?: 'Projects', id: any, name?: string | null, documents: Array<{ __typename?: 'Documents', id: any, name: string, slug: string }> }> } }> }> };
+export type UserDataByIdQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> }> };
 
 export const UserOverviewFragmentDoc = gql`
     fragment UserOverview on Users {
@@ -30075,6 +30082,50 @@ export const UserOverviewFragmentDoc = gql`
   }
 }
     `;
+export const UserAccountsDocument = gql`
+    query UserAccounts($email: String) {
+  users(where: {email: {_eq: $email}}) {
+    accountUsers {
+      account {
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserAccountsQuery__
+ *
+ * To run a query within a React component, call `useUserAccountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserAccountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserAccountsQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useUserAccountsQuery(baseOptions?: Apollo.QueryHookOptions<UserAccountsQuery, UserAccountsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserAccountsQuery, UserAccountsQueryVariables>(UserAccountsDocument, options);
+      }
+export function useUserAccountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserAccountsQuery, UserAccountsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserAccountsQuery, UserAccountsQueryVariables>(UserAccountsDocument, options);
+        }
+export function useUserAccountsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserAccountsQuery, UserAccountsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserAccountsQuery, UserAccountsQueryVariables>(UserAccountsDocument, options);
+        }
+export type UserAccountsQueryHookResult = ReturnType<typeof useUserAccountsQuery>;
+export type UserAccountsLazyQueryHookResult = ReturnType<typeof useUserAccountsLazyQuery>;
+export type UserAccountsSuspenseQueryHookResult = ReturnType<typeof useUserAccountsSuspenseQuery>;
+export type UserAccountsQueryResult = Apollo.QueryResult<UserAccountsQuery, UserAccountsQueryVariables>;
 export const UserDataByEmailDocument = gql`
     query UserDataByEmail($email: String!) {
   users(where: {email: {_eq: $email}}) {

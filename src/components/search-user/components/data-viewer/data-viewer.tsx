@@ -1,5 +1,5 @@
 import type {
-  FormattedOverviewItem,
+  UserDocumentsItem,
   UserData,
 } from "../../../../api-hooks/use-overview";
 import { columns } from "./components/accounts-table.tsx/columns";
@@ -7,21 +7,20 @@ import { DataTable } from "./components/accounts-table.tsx/data-table";
 import UserBar from "./components/user-bar";
 
 export const DataViewer = ({
-  data,
+  customerUserData,
+  customerDocumentData,
 }: {
-  data: {
-    userData?: UserData;
-    formattedOverview?: FormattedOverviewItem[];
-  };
+  customerUserData?: UserData;
+  customerDocumentData?: UserDocumentsItem[];
 }) => {
   return (
     <div className="p-4 py-0 pb-4 border border-border rounded-lg">
-      {data?.userData ? (
-        <UserBar userData={data.userData} />
+      {customerUserData ? (
+        <UserBar userData={customerUserData} />
       ) : (
         <div>No user data found</div>
       )}
-      <DataTable columns={columns} data={data?.formattedOverview ?? []} />
+      <DataTable columns={columns} data={customerDocumentData ?? []} />
     </div>
   );
 };

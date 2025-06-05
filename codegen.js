@@ -22,6 +22,15 @@ export default {
         withHooks: true,
         withHOC: false,
         withComponent: false,
+        scalars: {
+          _numeric: "number[]",
+          _text: "string[]",
+          _uuid: "string[]",
+          numeric: "number",
+          timestamp: "string",
+          timestamptz: "string",
+          uuid: "string",
+        },
       },
     },
     "./graphql.schema.json": {

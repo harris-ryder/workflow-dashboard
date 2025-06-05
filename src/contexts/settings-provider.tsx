@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 type SettingsProviderProps = {
   children: React.ReactNode;
@@ -8,6 +8,7 @@ type SettingsProviderState = {
   settings: Settings;
   setSettings: (settings: Settings) => void;
   environment: Environment;
+  environmentConfig: EnvironmentConfig;
   setEnvironment: (environment: Environment) => void;
 };
 
@@ -46,6 +47,7 @@ export type Environment = keyof Settings;
 const SettingsProviderContext = createContext<SettingsProviderState>({
   settings: defaultSettings,
   setSettings: () => null,
+  environmentConfig: defaultSettings.local,
   environment: "local",
   setEnvironment: () => null,
 });
@@ -67,6 +69,7 @@ export function SettingsProvider({
       localStorage.setItem("settings", JSON.stringify(settings));
       setSettings(settings);
     },
+    environmentConfig: settings[environment],
     environment,
     setEnvironment,
   };

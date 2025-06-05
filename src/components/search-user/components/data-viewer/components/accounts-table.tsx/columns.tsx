@@ -9,9 +9,9 @@ import { DropdownMenuTrigger } from "../../../../../../ui/shadcn-primitives/drop
 import { DropdownMenu } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
 import { Button } from "../../../../../../ui/shadcn-primitives/button";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { FormattedOverviewItem } from "../../../../../../api-hooks/use-overview";
+import type { UserDocumentsItem } from "../../../../../../api-hooks/use-overview";
 
-export const columns: ColumnDef<FormattedOverviewItem>[] = [
+export const columns: ColumnDef<UserDocumentsItem>[] = [
   {
     id: "account.name",
     accessorKey: "account.name",
@@ -36,6 +36,28 @@ export const columns: ColumnDef<FormattedOverviewItem>[] = [
   {
     accessorKey: "document.id",
     header: "Document ID",
+  },
+  {
+    accessorKey: "account.isMyUserAccountMember",
+    header: "Account Member",
+    cell: ({ row }) => {
+      const isMember = row.original.account.isMyUserAccountMember;
+      const accountId = row.original.account.id;
+
+      return (
+        <Button
+          variant={isMember ? "default" : "outline"}
+          size="sm"
+          onClick={() => {
+            // TODO: Implement mutation to toggle membership
+            // This would use the UpdateAccountUsers mutation
+            // with the accountId to toggle the membership status
+          }}
+        >
+          {isMember ? "Leave" : "Join"}
+        </Button>
+      );
+    },
   },
   {
     id: "actions",

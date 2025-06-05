@@ -1,11 +1,14 @@
 import {
+  useUserAccountsQuery,
   useUserDataByEmailQuery,
+  useUserDataByIdQuery,
   type UserDataByEmailQuery,
 } from "../generated/graphql";
 
 type UseOverviewProps = {
-  userId?: string;
-  email?: string;
+  customerId?: string;
+  customerEmail?: string;
+  myUserEmail?: string;
 };
 
 type AccountUser = NonNullable<
@@ -25,10 +28,11 @@ export type UserData = Pick<
   | "lastSignInAt"
 >;
 
-export type FormattedOverviewItem = {
+export type UserDocumentsItem = {
   account: {
     id: AccountUser["account"]["id"];
     name: AccountUser["account"]["name"];
+    isMyUserAccountMember: boolean;
   };
   project: {
     id: Project["id"];
@@ -40,45 +44,87 @@ export type FormattedOverviewItem = {
   };
 };
 
-export const useOverview = ({ userId, email }: UseOverviewProps) => {
-  const { loading, error, data } = useUserDataByEmailQuery({
+export const useOverview = ({
+  customerId,
+  customerEmail,
+  myUserEmail,
+}: UseOverviewProps) => {
+  const {
+    loading: loadingEmail,
+    error: errorEmail,
+    data: dataEmail,
+  } = useUserDataByEmailQuery({
     variables: {
-      email: email ?? "",
+      email: customerEmail ?? "",
     },
+    skip: !customerEmail,
   });
 
-  const overview = data?.users?.[0]?.accountUsers;
+  const {
+    loading: loadingUserId,
+    error: errorUserId,
+    data: dataUserId,
+  } = useUserDataByIdQuery({
+    variables: {
+      userId: customerId ?? "",
+    },
+    skip: !customerId,
+  });
 
-  const userData = data?.users?.[0]
+  const { data: myUserAccountsData } = useUserAccountsQuery({
+    variables: {
+      email: myUserEmail ?? "",
+    },
+    skip: !myUserEmail,
+  });
+
+  const customerData = customerEmail ? dataEmail : dataUserId;
+  const customerDataLoading = customerEmail ? loadingEmail : loadingUserId;
+  const customerDataError = customerEmail ? errorEmail : errorUserId;
+
+  const myUserAccountsIds =
+    myUserAccountsData?.users?.[0]?.accountUsers?.map(
+      (accountUser) => accountUser.account.id
+    ) ?? [];
+
+  const customerUserData = customerData?.users?.[0]
     ? ({
-        id: data.users[0].id,
-        firstName: data.users[0].firstName,
-        lastName: data.users[0].lastName,
-        profilePictureUrl: data.users[0].profilePictureUrl,
-        email: data.users[0].email,
-        createdAt: data.users[0].createdAt,
-        lastSignInAt: data.users[0].lastSignInAt,
+        id: customerData.users[0].id,
+        firstName: customerData.users[0].firstName,
+        lastName: customerData.users[0].lastName,
+        profilePictureUrl: customerData.users[0].profilePictureUrl,
+        email: customerData.users[0].email,
+        createdAt: customerData.users[0].createdAt,
+        lastSignInAt: customerData.users[0].lastSignInAt,
       } as UserData)
     : undefined;
 
-  const formattedOverview = overview?.flatMap((accountUsers) =>
-    accountUsers.account.projects.flatMap((project) =>
-      project.documents.map((document) => ({
-        account: {
-          id: accountUsers.account.id,
-          name: accountUsers.account.name,
-        },
-        project: {
-          id: project.id,
-          name: project.name,
-        },
-        document: {
-          id: document.id,
-          name: document.name,
-        },
-      }))
-    )
-  ) as FormattedOverviewItem[] | undefined;
+  const customerDocumentData = customerData?.users?.[0]?.accountUsers?.flatMap(
+    (accountUsers) =>
+      accountUsers.account.projects.flatMap((project) =>
+        project.documents.map((document) => ({
+          account: {
+            id: accountUsers.account.id,
+            name: accountUsers.account.name,
+            isMyUserAccountMember: myUserAccountsIds.includes(
+              accountUsers.account.id
+            ),
+          },
+          project: {
+            id: project.id,
+            name: project.name,
+          },
+          document: {
+            id: document.id,
+            name: document.name,
+          },
+        }))
+      )
+  ) as UserDocumentsItem[] | undefined;
 
-  return { loading, error, data: { userData, formattedOverview } };
+  return {
+    loading: customerDataLoading,
+    error: customerDataError,
+    data: { customerUserData, customerDocumentData },
+  };
 };
