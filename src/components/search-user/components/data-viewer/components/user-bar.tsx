@@ -32,7 +32,9 @@ const UserBar: React.FC<UserBarProps> = ({ userData }) => {
 
         <span className="text-muted-foreground">Last sign in</span>
         <span className="text-muted-foreground">
-          {new Date(userData.lastSignInAt).toLocaleString()}
+          {userData.lastSignInAt
+            ? new Date(userData.lastSignInAt).toLocaleString()
+            : "Never"}
         </span>
       </div>
     </div>
