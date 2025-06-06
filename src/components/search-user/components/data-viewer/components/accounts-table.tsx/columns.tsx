@@ -10,30 +10,37 @@ export const columns: ColumnDef<UserDocumentsItem>[] = [
     header: "Account Name",
   },
   {
+    id: "account.id",
     accessorKey: "account.id",
     header: "Account ID",
   },
   {
+    id: "project.name",
     accessorKey: "project.name",
     header: "Project Name",
   },
   {
+    id: "project.id",
     accessorKey: "project.id",
     header: "Project ID",
   },
   {
+    id: "document.name",
     accessorKey: "document.name",
     header: "Document Name",
   },
   {
+    id: "document.id",
     accessorKey: "document.id",
     header: "Document ID",
   },
   {
+    id: "document.slug",
     accessorKey: "document.slug",
     header: "Document Slug",
   },
   {
+    id: "document.isMyUserDocumentMember",
     accessorKey: "document.isMyUserDocumentMember",
     header: "Join Task",
     cell: ({ row }) => {

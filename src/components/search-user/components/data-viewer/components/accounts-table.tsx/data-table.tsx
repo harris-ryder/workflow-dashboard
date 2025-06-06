@@ -2,14 +2,13 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
   type VisibilityState,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { Input } from "../../../../../../ui/shadcn-primitives/input";
 import { Button } from "../../../../../../ui/shadcn-primitives/button";
 import {
   DropdownMenu,
@@ -17,14 +16,15 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { Input } from "../../../../../../ui/shadcn-primitives/input";
 import {
+  Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "../../../../../../ui/shadcn-primitives/table";
-import { Table } from "../../../../../../ui/shadcn-primitives/table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,7 +36,11 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    "account.id": false,
+    "project.id": false,
+    "document.id": false,
+  });
 
   const table = useReactTable({
     data,
