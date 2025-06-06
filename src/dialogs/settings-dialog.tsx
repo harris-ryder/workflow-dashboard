@@ -62,7 +62,7 @@ function SettingsForm({ environmentConfig, onSubmit }: SettingsFormProps) {
           id="webUrl"
           type="text"
           name="webUrl"
-          value={environmentConfig.webUrl}
+          value={webUrl}
           onChange={(e) => setWebUrl(e.target.value)}
           placeholder="Web URL"
           className="w-full"
