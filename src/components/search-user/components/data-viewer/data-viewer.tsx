@@ -18,7 +18,7 @@ export const DataViewer = ({
       {customerUserData ? (
         <UserBar userData={customerUserData} />
       ) : (
-        <div>No user data found</div>
+        <div className="pt-4">No user data found</div>
       )}
       <DataTable columns={columns} data={customerDocumentData ?? []} />
     </div>
