@@ -1,15 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
 import type { UserDocumentsItem } from "../../../../../../api-hooks/use-overview";
-import { Button } from "../../../../../../ui/shadcn-primitives/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { OpenDocumentButton } from "./open-document";
 import { ToggleJoinDocument } from "./toggle-join-document";
 
 export const columns: ColumnDef<UserDocumentsItem>[] = [
@@ -39,12 +30,15 @@ export const columns: ColumnDef<UserDocumentsItem>[] = [
     header: "Document ID",
   },
   {
+    accessorKey: "document.slug",
+    header: "Document Slug",
+  },
+  {
     accessorKey: "document.isMyUserDocumentMember",
     header: "Join Task",
     cell: ({ row }) => {
       return (
         <ToggleJoinDocument
-          userId={row.original.document.id}
           documentId={row.original.document.id}
           accountId={row.original.account.id}
           isMember={row.original.document.isMyUserDocumentMember}
@@ -53,33 +47,10 @@ export const columns: ColumnDef<UserDocumentsItem>[] = [
     },
   },
   {
-    id: "actions",
+    id: "open.docment",
+    header: "Open",
     cell: ({ row }) => {
-      const document = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard.writeText(document.document.id)
-              }
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <OpenDocumentButton documentSlug={row.original.document.slug} />;
     },
   },
 ];

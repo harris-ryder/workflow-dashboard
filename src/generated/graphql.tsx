@@ -30042,12 +30042,27 @@ export type CreateDocumentUserMutationVariables = Exact<{
 
 export type CreateDocumentUserMutation = { __typename?: 'mutation_root', insertDocumentUsersOne?: { __typename?: 'DocumentUsers', id: string } | null };
 
-export type UserDocumentsQueryVariables = Exact<{
-  email?: InputMaybe<Scalars['String']['input']>;
+export type DeleteDocumentUserMutationVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+  documentId: Scalars['uuid']['input'];
 }>;
 
 
-export type UserDocumentsQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> }> };
+export type DeleteDocumentUserMutation = { __typename?: 'mutation_root', deleteDocumentUsers?: { __typename?: 'DocumentUsersMutationResponse', affectedRows: number } | null };
+
+export type UserDocumentsQueryVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+}>;
+
+
+export type UserDocumentsQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
+
+export type UserDocumentsRealtimeSubscriptionVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+}>;
+
+
+export type UserDocumentsRealtimeSubscription = { __typename?: 'subscription_root', usersByPk?: { __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
 
 export type GetUserIdQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -30058,19 +30073,19 @@ export type GetUserIdQuery = { __typename?: 'query_root', users: Array<{ __typen
 
 export type UserOverviewFragment = { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> };
 
-export type UserDataByEmailQueryVariables = Exact<{
-  email: Scalars['String']['input'];
-}>;
-
-
-export type UserDataByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> }> };
-
 export type UserDataByIdQueryVariables = Exact<{
   userId: Scalars['uuid']['input'];
 }>;
 
 
-export type UserDataByIdQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> }> };
+export type UserDataByIdQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> } | null };
+
+export type UserDataRealtimeSubscriptionVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+}>;
+
+
+export type UserDataRealtimeSubscription = { __typename?: 'subscription_root', usersByPk?: { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> } | null };
 
 export const UserOverviewFragmentDoc = gql`
     fragment UserOverview on Users {
@@ -30135,9 +30150,45 @@ export function useCreateDocumentUserMutation(baseOptions?: Apollo.MutationHookO
 export type CreateDocumentUserMutationHookResult = ReturnType<typeof useCreateDocumentUserMutation>;
 export type CreateDocumentUserMutationResult = Apollo.MutationResult<CreateDocumentUserMutation>;
 export type CreateDocumentUserMutationOptions = Apollo.BaseMutationOptions<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>;
+export const DeleteDocumentUserDocument = gql`
+    mutation DeleteDocumentUser($userId: uuid!, $documentId: uuid!) {
+  deleteDocumentUsers(
+    where: {_and: [{userId: {_eq: $userId}}, {documentId: {_eq: $documentId}}]}
+  ) {
+    affectedRows
+  }
+}
+    `;
+export type DeleteDocumentUserMutationFn = Apollo.MutationFunction<DeleteDocumentUserMutation, DeleteDocumentUserMutationVariables>;
+
+/**
+ * __useDeleteDocumentUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteDocumentUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteDocumentUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteDocumentUserMutation, { data, loading, error }] = useDeleteDocumentUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      documentId: // value for 'documentId'
+ *   },
+ * });
+ */
+export function useDeleteDocumentUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDocumentUserMutation, DeleteDocumentUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteDocumentUserMutation, DeleteDocumentUserMutationVariables>(DeleteDocumentUserDocument, options);
+      }
+export type DeleteDocumentUserMutationHookResult = ReturnType<typeof useDeleteDocumentUserMutation>;
+export type DeleteDocumentUserMutationResult = Apollo.MutationResult<DeleteDocumentUserMutation>;
+export type DeleteDocumentUserMutationOptions = Apollo.BaseMutationOptions<DeleteDocumentUserMutation, DeleteDocumentUserMutationVariables>;
 export const UserDocumentsDocument = gql`
-    query UserDocuments($email: String) {
-  users(where: {email: {_eq: $email}}) {
+    query UserDocuments($userId: uuid!) {
+  usersByPk(id: $userId) {
     documentUsers {
       document {
         id
@@ -30159,11 +30210,11 @@ export const UserDocumentsDocument = gql`
  * @example
  * const { data, loading, error } = useUserDocumentsQuery({
  *   variables: {
- *      email: // value for 'email'
+ *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useUserDocumentsQuery(baseOptions?: Apollo.QueryHookOptions<UserDocumentsQuery, UserDocumentsQueryVariables>) {
+export function useUserDocumentsQuery(baseOptions: Apollo.QueryHookOptions<UserDocumentsQuery, UserDocumentsQueryVariables> & ({ variables: UserDocumentsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<UserDocumentsQuery, UserDocumentsQueryVariables>(UserDocumentsDocument, options);
       }
@@ -30179,6 +30230,40 @@ export type UserDocumentsQueryHookResult = ReturnType<typeof useUserDocumentsQue
 export type UserDocumentsLazyQueryHookResult = ReturnType<typeof useUserDocumentsLazyQuery>;
 export type UserDocumentsSuspenseQueryHookResult = ReturnType<typeof useUserDocumentsSuspenseQuery>;
 export type UserDocumentsQueryResult = Apollo.QueryResult<UserDocumentsQuery, UserDocumentsQueryVariables>;
+export const UserDocumentsRealtimeDocument = gql`
+    subscription UserDocumentsRealtime($userId: uuid!) {
+  usersByPk(id: $userId) {
+    documentUsers {
+      document {
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserDocumentsRealtimeSubscription__
+ *
+ * To run a query within a React component, call `useUserDocumentsRealtimeSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserDocumentsRealtimeSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserDocumentsRealtimeSubscription({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserDocumentsRealtimeSubscription(baseOptions: Apollo.SubscriptionHookOptions<UserDocumentsRealtimeSubscription, UserDocumentsRealtimeSubscriptionVariables> & ({ variables: UserDocumentsRealtimeSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UserDocumentsRealtimeSubscription, UserDocumentsRealtimeSubscriptionVariables>(UserDocumentsRealtimeDocument, options);
+      }
+export type UserDocumentsRealtimeSubscriptionHookResult = ReturnType<typeof useUserDocumentsRealtimeSubscription>;
+export type UserDocumentsRealtimeSubscriptionResult = Apollo.SubscriptionResult<UserDocumentsRealtimeSubscription>;
 export const GetUserIdDocument = gql`
     query GetUserId($email: String!) {
   users(where: {email: {_eq: $email}}) {
@@ -30219,49 +30304,9 @@ export type GetUserIdQueryHookResult = ReturnType<typeof useGetUserIdQuery>;
 export type GetUserIdLazyQueryHookResult = ReturnType<typeof useGetUserIdLazyQuery>;
 export type GetUserIdSuspenseQueryHookResult = ReturnType<typeof useGetUserIdSuspenseQuery>;
 export type GetUserIdQueryResult = Apollo.QueryResult<GetUserIdQuery, GetUserIdQueryVariables>;
-export const UserDataByEmailDocument = gql`
-    query UserDataByEmail($email: String!) {
-  users(where: {email: {_eq: $email}}) {
-    ...UserOverview
-  }
-}
-    ${UserOverviewFragmentDoc}`;
-
-/**
- * __useUserDataByEmailQuery__
- *
- * To run a query within a React component, call `useUserDataByEmailQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserDataByEmailQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserDataByEmailQuery({
- *   variables: {
- *      email: // value for 'email'
- *   },
- * });
- */
-export function useUserDataByEmailQuery(baseOptions: Apollo.QueryHookOptions<UserDataByEmailQuery, UserDataByEmailQueryVariables> & ({ variables: UserDataByEmailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserDataByEmailQuery, UserDataByEmailQueryVariables>(UserDataByEmailDocument, options);
-      }
-export function useUserDataByEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserDataByEmailQuery, UserDataByEmailQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserDataByEmailQuery, UserDataByEmailQueryVariables>(UserDataByEmailDocument, options);
-        }
-export function useUserDataByEmailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserDataByEmailQuery, UserDataByEmailQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<UserDataByEmailQuery, UserDataByEmailQueryVariables>(UserDataByEmailDocument, options);
-        }
-export type UserDataByEmailQueryHookResult = ReturnType<typeof useUserDataByEmailQuery>;
-export type UserDataByEmailLazyQueryHookResult = ReturnType<typeof useUserDataByEmailLazyQuery>;
-export type UserDataByEmailSuspenseQueryHookResult = ReturnType<typeof useUserDataByEmailSuspenseQuery>;
-export type UserDataByEmailQueryResult = Apollo.QueryResult<UserDataByEmailQuery, UserDataByEmailQueryVariables>;
 export const UserDataByIdDocument = gql`
     query UserDataById($userId: uuid!) {
-  users(where: {id: {_eq: $userId}}) {
+  usersByPk(id: $userId) {
     ...UserOverview
   }
 }
@@ -30299,3 +30344,33 @@ export type UserDataByIdQueryHookResult = ReturnType<typeof useUserDataByIdQuery
 export type UserDataByIdLazyQueryHookResult = ReturnType<typeof useUserDataByIdLazyQuery>;
 export type UserDataByIdSuspenseQueryHookResult = ReturnType<typeof useUserDataByIdSuspenseQuery>;
 export type UserDataByIdQueryResult = Apollo.QueryResult<UserDataByIdQuery, UserDataByIdQueryVariables>;
+export const UserDataRealtimeDocument = gql`
+    subscription UserDataRealtime($userId: uuid!) {
+  usersByPk(id: $userId) {
+    ...UserOverview
+  }
+}
+    ${UserOverviewFragmentDoc}`;
+
+/**
+ * __useUserDataRealtimeSubscription__
+ *
+ * To run a query within a React component, call `useUserDataRealtimeSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUserDataRealtimeSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserDataRealtimeSubscription({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserDataRealtimeSubscription(baseOptions: Apollo.SubscriptionHookOptions<UserDataRealtimeSubscription, UserDataRealtimeSubscriptionVariables> & ({ variables: UserDataRealtimeSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UserDataRealtimeSubscription, UserDataRealtimeSubscriptionVariables>(UserDataRealtimeDocument, options);
+      }
+export type UserDataRealtimeSubscriptionHookResult = ReturnType<typeof useUserDataRealtimeSubscription>;
+export type UserDataRealtimeSubscriptionResult = Apollo.SubscriptionResult<UserDataRealtimeSubscription>;

@@ -27,18 +27,18 @@ const USER_OVERVIEW_FRAGMENT = gql`
   }
 `;
 
-export const GET_USER_OVERVIEW_BY_EMAIL = gql`
-  query UserDataByEmail($email: String!) {
-    users(where: { email: { _eq: $email } }) {
+export const GET_USER_OVERVIEW_BY_ID = gql`
+  query UserDataById($userId: uuid!) {
+    usersByPk(id: $userId) {
       ...UserOverview
     }
   }
   ${USER_OVERVIEW_FRAGMENT}
 `;
 
-export const GET_USER_OVERVIEW_BY_ID = gql`
-  query UserDataById($userId: uuid!) {
-    users(where: { id: { _eq: $userId } }) {
+export const USER_CHANGES_SUBSCRIPTION = gql`
+  subscription UserDataRealtime($userId: uuid!) {
+    usersByPk(id: $userId) {
       ...UserOverview
     }
   }

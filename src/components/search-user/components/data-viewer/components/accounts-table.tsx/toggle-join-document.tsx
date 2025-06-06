@@ -1,7 +1,11 @@
 import { useMyUserInfo } from "../../../../../../api-hooks/use-my-user-info";
-import { useSettings } from "../../../../../../contexts/settings-provider";
-import { useCreateDocumentUserMutation } from "../../../../../../generated/graphql";
+import SettingsDialog from "../../../../../../dialogs/settings-dialog";
+import {
+  useCreateDocumentUserMutation,
+  useDeleteDocumentUserMutation,
+} from "../../../../../../generated/graphql";
 import { Button } from "../../../../../../ui/shadcn-primitives/button";
+import { toast } from "sonner";
 
 export const ToggleJoinDocument = ({
   documentId,
@@ -13,14 +17,45 @@ export const ToggleJoinDocument = ({
   isMember: boolean;
 }) => {
   const [createDocumentUser] = useCreateDocumentUserMutation();
+  const [deleteDocumentUser] = useDeleteDocumentUserMutation();
   const { userId } = useMyUserInfo();
+
+  if (!userId) {
+    return (
+      <SettingsDialog
+        trigger={
+          <Button
+            variant="outline"
+            className="w-18"
+            size="sm"
+            onClick={() => {
+              toast.error("Enter your email in the settings");
+            }}
+          >
+            Join
+          </Button>
+        }
+      />
+    );
+  }
 
   return (
     <Button
       variant={isMember ? "default" : "outline"}
+      className="w-18"
       size="sm"
       onClick={() => {
         if (!userId) {
+          return;
+        }
+
+        if (isMember) {
+          deleteDocumentUser({
+            variables: {
+              userId: userId ?? "",
+              documentId: documentId,
+            },
+          });
           return;
         }
 

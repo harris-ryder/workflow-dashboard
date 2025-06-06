@@ -14,24 +14,32 @@ type SettingsProviderState = {
 
 const defaultSettings: Settings = {
   local: {
-    uri: "http://localhost:8080/v1/graphql",
-    adminSecret: "myadminsecretkey",
-    myUserEmail: "",
+    webUrl: import.meta.env.VITE_LOCAL_WEB_URL || "",
+    hasuraHttpUrl: import.meta.env.VITE_LOCAL_HASURA_HTTP_URL || "",
+    hasuraWsUrl: import.meta.env.VITE_LOCAL_HASURA_WS_URL || "",
+    adminSecret: import.meta.env.VITE_LOCAL_ADMIN_SECRET || "",
+    myUserEmail: import.meta.env.VITE_LOCAL_MY_USER_EMAIL || "",
   },
   staging: {
-    uri: "https://staging.workflow.com/v1/graphql",
-    adminSecret: "myadminsecretkey",
-    myUserEmail: "",
+    webUrl: import.meta.env.VITE_STAGING_WEB_URL || "",
+    hasuraHttpUrl: import.meta.env.VITE_STAGING_HASURA_HTTP_URL || "",
+    hasuraWsUrl: import.meta.env.VITE_STAGING_HASURA_WS_URL || "",
+    adminSecret: import.meta.env.VITE_STAGING_ADMIN_SECRET || "",
+    myUserEmail: import.meta.env.VITE_STAGING_MY_USER_EMAIL || "",
   },
   production: {
-    uri: "https://production.workflow.com/v1/graphql",
-    adminSecret: "myadminsecretkey",
-    myUserEmail: "",
+    webUrl: import.meta.env.VITE_PRODUCTION_WEB_URL || "",
+    hasuraHttpUrl: import.meta.env.VITE_PRODUCTION_HASURA_HTTP_URL || "",
+    hasuraWsUrl: import.meta.env.VITE_PRODUCTION_HASURA_WS_URL || "",
+    adminSecret: import.meta.env.VITE_PRODUCTION_ADMIN_SECRET || "",
+    myUserEmail: import.meta.env.VITE_PRODUCTION_MY_USER_EMAIL || "",
   },
 };
 
 export type EnvironmentConfig = {
-  uri: string;
+  webUrl: string;
+  hasuraHttpUrl: string;
+  hasuraWsUrl: string;
   adminSecret: string;
   myUserEmail: string;
 };

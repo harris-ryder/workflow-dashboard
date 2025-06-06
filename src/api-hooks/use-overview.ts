@@ -1,8 +1,10 @@
 import {
-  useUserDataByEmailQuery,
+  useGetUserIdQuery,
   useUserDataByIdQuery,
+  useUserDataRealtimeSubscription,
   useUserDocumentsQuery,
-  type UserDataByEmailQuery,
+  useUserDocumentsRealtimeSubscription,
+  type UserDataByIdQuery,
 } from "../generated/graphql";
 
 type UseOverviewProps = {
@@ -12,13 +14,13 @@ type UseOverviewProps = {
 };
 
 type AccountUser = NonNullable<
-  UserDataByEmailQuery["users"][0]["accountUsers"][0]
+  NonNullable<UserDataByIdQuery["usersByPk"]>["accountUsers"][0]
 >;
 type Project = NonNullable<AccountUser["account"]["projects"][0]>;
 type Document = NonNullable<Project["documents"][0]>;
 
 export type UserData = Pick<
-  NonNullable<UserDataByEmailQuery["users"][0]>,
+  NonNullable<UserDataByIdQuery["usersByPk"]>,
   | "id"
   | "firstName"
   | "lastName"
@@ -41,6 +43,7 @@ export type UserDocumentsItem = {
     id: Document["id"];
     name: Document["name"];
     isMyUserDocumentMember: boolean;
+    slug: Document["slug"];
   };
 };
 
@@ -49,57 +52,96 @@ export const useOverview = ({
   customerEmail,
   myUserEmail,
 }: UseOverviewProps) => {
-  const {
-    loading: loadingEmail,
-    error: errorEmail,
-    data: dataEmail,
-  } = useUserDataByEmailQuery({
+  // Fetch customer user id if customerEmail is provided
+  const { data: dataCustomerUserId } = useGetUserIdQuery({
     variables: {
       email: customerEmail ?? "",
     },
-    skip: !customerEmail,
+    skip: !customerEmail || !!customerId,
   });
+  const customerUserId = dataCustomerUserId?.users?.[0]?.id ?? customerId;
 
+  // Fetch customer data by id
   const {
-    loading: loadingUserId,
-    error: errorUserId,
-    data: dataUserId,
+    loading: customerDataLoading,
+    error: customerDataError,
+    data: customerData,
   } = useUserDataByIdQuery({
     variables: {
-      userId: customerId ?? "",
+      userId: customerUserId ?? "",
     },
-    skip: !customerId,
+    skip: !customerUserId,
   });
 
-  const { data: myUserDocumentsData } = useUserDocumentsQuery({
+  // Add realtime subscription
+  const { data: subscriptionData } = useUserDataRealtimeSubscription({
+    variables: {
+      userId: customerUserId ?? "",
+    },
+    skip: !customerUserId,
+  });
+
+  console.log("subscriptionData", subscriptionData);
+
+  // Use subscription data if available, otherwise fall back to query data
+  const effectiveCustomerData =
+    subscriptionData?.usersByPk ?? customerData?.usersByPk;
+
+  // Get my user id
+  const { data: myUserIdData } = useGetUserIdQuery({
     variables: {
       email: myUserEmail ?? "",
     },
     skip: !myUserEmail,
   });
+  const myUserId = myUserIdData?.users?.[0]?.id;
 
-  const customerData = customerEmail ? dataEmail : dataUserId;
-  const customerDataLoading = customerEmail ? loadingEmail : loadingUserId;
-  const customerDataError = customerEmail ? errorEmail : errorUserId;
+  // Fetch my user documents
+  const { data: myUserDocumentsData } = useUserDocumentsQuery({
+    variables: {
+      userId: myUserId ?? "",
+    },
+    skip: !myUserId,
+  });
 
+  const { data: subscriptionDataMyUserDocuments } =
+    useUserDocumentsRealtimeSubscription({
+      variables: {
+        userId: myUserId ?? "",
+      },
+    });
+
+  console.log("myUserId", myUserId);
+  console.log(
+    "subscriptionDataMyUserDocuments",
+    subscriptionDataMyUserDocuments
+  );
+
+  const effectiveMyUserDocumentsData =
+    subscriptionDataMyUserDocuments?.usersByPk ??
+    myUserDocumentsData?.usersByPk;
+
+  // Get my user documents ids
   const myUserDocumentsIds =
-    myUserDocumentsData?.users?.[0]?.documentUsers?.map(
+    effectiveMyUserDocumentsData?.documentUsers?.map(
       (documentUser) => documentUser.document.id
     ) ?? [];
 
-  const customerUserData = customerData?.users?.[0]
+  // Extract customer user data
+  const customerUserData = effectiveCustomerData
     ? ({
-        id: customerData.users[0].id,
-        firstName: customerData.users[0].firstName,
-        lastName: customerData.users[0].lastName,
-        profilePictureUrl: customerData.users[0].profilePictureUrl,
-        email: customerData.users[0].email,
-        createdAt: customerData.users[0].createdAt,
-        lastSignInAt: customerData.users[0].lastSignInAt,
+        id: effectiveCustomerData.id,
+        firstName: effectiveCustomerData.firstName,
+        lastName: effectiveCustomerData.lastName,
+        profilePictureUrl: effectiveCustomerData.profilePictureUrl,
+        email: effectiveCustomerData.email,
+        createdAt: effectiveCustomerData.createdAt,
+        lastSignInAt: effectiveCustomerData.lastSignInAt,
       } as UserData)
     : undefined;
 
-  const customerDocumentData = customerData?.users?.[0]?.accountUsers?.flatMap(
+  // Extract customer document data
+  const customerDocumentData = customerData?.usersByPk?.accountUsers?.flatMap(
     (accountUsers) =>
       accountUsers.account.projects.flatMap((project) =>
         project.documents.map((document) => ({
@@ -115,6 +157,7 @@ export const useOverview = ({
             id: document.id,
             name: document.name,
             isMyUserDocumentMember: myUserDocumentsIds.includes(document.id),
+            slug: document.slug,
           },
         }))
       )

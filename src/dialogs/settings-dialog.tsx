@@ -21,6 +21,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../ui/shadcn-primitives/tabs";
+import { toast } from "sonner";
 
 interface SettingsDialogProps {
   trigger: React.ReactNode;
@@ -32,50 +33,104 @@ interface SettingsFormProps {
 }
 
 function SettingsForm({ environmentConfig, onSubmit }: SettingsFormProps) {
-  const [uri, setUri] = useState(environmentConfig.uri);
+  const [webUrl, setWebUrl] = useState(environmentConfig.webUrl);
+  const [hasuraHttpUrl, setHasuraHttpUrl] = useState(
+    environmentConfig.hasuraHttpUrl
+  );
+  const [hasuraWsUrl, setHasuraWsUrl] = useState(environmentConfig.hasuraWsUrl);
   const [adminSecret, setAdminSecret] = useState(environmentConfig.adminSecret);
   const [myUserEmail, setMyUserEmail] = useState(environmentConfig.myUserEmail);
 
-  const handleSave = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     const updatedEnvironmentConfig: EnvironmentConfig = {
-      uri,
+      webUrl: webUrl,
+      hasuraHttpUrl,
+      hasuraWsUrl,
       adminSecret,
       myUserEmail,
     };
     onSubmit(updatedEnvironmentConfig);
+    toast.success("Settings saved");
   };
 
   return (
-    <div className="space-y-4">
-      <Input
-        type="text"
-        name="uri"
-        value={uri}
-        onChange={(e) => setUri(e.target.value)}
-        placeholder="GraphQL URI"
-        className="w-full"
-      />
-      <Input
-        type="text"
-        name="adminSecret"
-        value={adminSecret}
-        onChange={(e) => setAdminSecret(e.target.value)}
-        placeholder="Admin Secret"
-        className="w-full"
-      />
-      <Input
-        type="text"
-        name="myUserEmail"
-        value={myUserEmail}
-        onChange={(e) => setMyUserEmail(e.target.value)}
-        placeholder="User Email"
-        className="w-full"
-      />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="webUrl" className="text-sm text-muted-foreground">
+          Web URL
+        </label>
+        <Input
+          id="webUrl"
+          type="text"
+          name="webUrl"
+          value={environmentConfig.webUrl}
+          onChange={(e) => setWebUrl(e.target.value)}
+          placeholder="Web URL"
+          className="w-full"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="httpUrl" className="text-sm text-muted-foreground">
+          Hasura HTTP URI
+        </label>
+        <Input
+          id="httpUrl"
+          type="text"
+          name="httpUrl"
+          value={hasuraHttpUrl}
+          onChange={(e) => setHasuraHttpUrl(e.target.value)}
+          placeholder="GraphQL URI"
+          className="w-full"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="wsUrl" className="text-sm text-muted-foreground">
+          Hasura WebSocket URI
+        </label>
+        <Input
+          id="wsUrl"
+          type="text"
+          name="wsUrl"
+          value={hasuraWsUrl}
+          onChange={(e) => setHasuraWsUrl(e.target.value)}
+          placeholder="GraphQL WebSocket URI"
+          className="w-full"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="adminSecret" className="text-sm text-muted-foreground">
+          Hasura admin secret
+        </label>
+        <Input
+          id="adminSecret"
+          type="text"
+          name="adminSecret"
+          value={adminSecret}
+          onChange={(e) => setAdminSecret(e.target.value)}
+          placeholder="Admin Secret"
+          className="w-full"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="myUserEmail" className="text-sm text-muted-foreground">
+          User email
+        </label>
+        <Input
+          id="myUserEmail"
+          type="text"
+          name="myUserEmail"
+          value={myUserEmail}
+          onChange={(e) => setMyUserEmail(e.target.value)}
+          placeholder="User Email"
+          className="w-full"
+        />
+      </div>
 
       <div className="flex justify-end">
-        <Button onClick={handleSave}>Save</Button>
+        <Button type="submit">Save</Button>
       </div>
-    </div>
+    </form>
   );
 }
 
