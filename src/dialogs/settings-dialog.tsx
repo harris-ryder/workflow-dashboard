@@ -37,7 +37,6 @@ function SettingsForm({ environmentConfig, onSubmit }: SettingsFormProps) {
   const [hasuraHttpUrl, setHasuraHttpUrl] = useState(
     environmentConfig.hasuraHttpUrl
   );
-  const [hasuraWsUrl, setHasuraWsUrl] = useState(environmentConfig.hasuraWsUrl);
   const [adminSecret, setAdminSecret] = useState(environmentConfig.adminSecret);
   const [myUserEmail, setMyUserEmail] = useState(environmentConfig.myUserEmail);
 
@@ -46,7 +45,6 @@ function SettingsForm({ environmentConfig, onSubmit }: SettingsFormProps) {
     const updatedEnvironmentConfig: EnvironmentConfig = {
       webUrl: webUrl,
       hasuraHttpUrl,
-      hasuraWsUrl,
       adminSecret,
       myUserEmail,
     };
@@ -85,30 +83,16 @@ function SettingsForm({ environmentConfig, onSubmit }: SettingsFormProps) {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor="wsUrl" className="text-sm text-muted-foreground">
-          Hasura WebSocket URI
+        <label htmlFor="httpUrl" className="text-sm text-muted-foreground">
+          Admin secret
         </label>
         <Input
-          id="wsUrl"
+          id="httpUrl"
           type="text"
-          name="wsUrl"
-          value={hasuraWsUrl}
-          onChange={(e) => setHasuraWsUrl(e.target.value)}
-          placeholder="GraphQL WebSocket URI"
-          className="w-full"
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label htmlFor="adminSecret" className="text-sm text-muted-foreground">
-          Hasura admin secret
-        </label>
-        <Input
-          id="adminSecret"
-          type="text"
-          name="adminSecret"
+          name="httpUrl"
           value={adminSecret}
           onChange={(e) => setAdminSecret(e.target.value)}
-          placeholder="Admin Secret"
+          placeholder="Admin secret"
           className="w-full"
         />
       </div>

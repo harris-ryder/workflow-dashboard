@@ -1,9 +1,7 @@
 import {
   useGetUserIdQuery,
   useUserDataByIdQuery,
-  useUserDataRealtimeSubscription,
   useUserDocumentsQuery,
-  useUserDocumentsRealtimeSubscription,
   type UserDataByIdQuery,
 } from "../generated/graphql";
 
@@ -73,20 +71,6 @@ export const useOverview = ({
     skip: !customerUserId,
   });
 
-  // Add realtime subscription
-  const { data: subscriptionData } = useUserDataRealtimeSubscription({
-    variables: {
-      userId: customerUserId ?? "",
-    },
-    skip: !customerUserId,
-  });
-
-  console.log("subscriptionData", subscriptionData);
-
-  // Use subscription data if available, otherwise fall back to query data
-  const effectiveCustomerData =
-    subscriptionData?.usersByPk ?? customerData?.usersByPk;
-
   // Get my user id
   const { data: myUserIdData } = useGetUserIdQuery({
     variables: {
@@ -104,39 +88,22 @@ export const useOverview = ({
     skip: !myUserId,
   });
 
-  const { data: subscriptionDataMyUserDocuments } =
-    useUserDocumentsRealtimeSubscription({
-      variables: {
-        userId: myUserId ?? "",
-      },
-    });
-
-  console.log("myUserId", myUserId);
-  console.log(
-    "subscriptionDataMyUserDocuments",
-    subscriptionDataMyUserDocuments
-  );
-
-  const effectiveMyUserDocumentsData =
-    subscriptionDataMyUserDocuments?.usersByPk ??
-    myUserDocumentsData?.usersByPk;
-
   // Get my user documents ids
   const myUserDocumentsIds =
-    effectiveMyUserDocumentsData?.documentUsers?.map(
+    myUserDocumentsData?.usersByPk?.documentUsers?.map(
       (documentUser) => documentUser.document.id
     ) ?? [];
 
   // Extract customer user data
-  const customerUserData = effectiveCustomerData
+  const customerUserData = customerData?.usersByPk
     ? ({
-        id: effectiveCustomerData.id,
-        firstName: effectiveCustomerData.firstName,
-        lastName: effectiveCustomerData.lastName,
-        profilePictureUrl: effectiveCustomerData.profilePictureUrl,
-        email: effectiveCustomerData.email,
-        createdAt: effectiveCustomerData.createdAt,
-        lastSignInAt: effectiveCustomerData.lastSignInAt,
+        id: customerData.usersByPk.id,
+        firstName: customerData.usersByPk.firstName,
+        lastName: customerData.usersByPk.lastName,
+        profilePictureUrl: customerData.usersByPk.profilePictureUrl,
+        email: customerData.usersByPk.email,
+        createdAt: customerData.usersByPk.createdAt,
+        lastSignInAt: customerData.usersByPk.lastSignInAt,
       } as UserData)
     : undefined;
 

@@ -30057,13 +30057,6 @@ export type UserDocumentsQueryVariables = Exact<{
 
 export type UserDocumentsQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
 
-export type UserDocumentsRealtimeSubscriptionVariables = Exact<{
-  userId: Scalars['uuid']['input'];
-}>;
-
-
-export type UserDocumentsRealtimeSubscription = { __typename?: 'subscription_root', usersByPk?: { __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
-
 export type GetUserIdQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
@@ -30079,13 +30072,6 @@ export type UserDataByIdQueryVariables = Exact<{
 
 
 export type UserDataByIdQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> } | null };
-
-export type UserDataRealtimeSubscriptionVariables = Exact<{
-  userId: Scalars['uuid']['input'];
-}>;
-
-
-export type UserDataRealtimeSubscription = { __typename?: 'subscription_root', usersByPk?: { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> } | null };
 
 export const UserOverviewFragmentDoc = gql`
     fragment UserOverview on Users {
@@ -30230,40 +30216,6 @@ export type UserDocumentsQueryHookResult = ReturnType<typeof useUserDocumentsQue
 export type UserDocumentsLazyQueryHookResult = ReturnType<typeof useUserDocumentsLazyQuery>;
 export type UserDocumentsSuspenseQueryHookResult = ReturnType<typeof useUserDocumentsSuspenseQuery>;
 export type UserDocumentsQueryResult = Apollo.QueryResult<UserDocumentsQuery, UserDocumentsQueryVariables>;
-export const UserDocumentsRealtimeDocument = gql`
-    subscription UserDocumentsRealtime($userId: uuid!) {
-  usersByPk(id: $userId) {
-    documentUsers {
-      document {
-        id
-      }
-    }
-  }
-}
-    `;
-
-/**
- * __useUserDocumentsRealtimeSubscription__
- *
- * To run a query within a React component, call `useUserDocumentsRealtimeSubscription` and pass it any options that fit your needs.
- * When your component renders, `useUserDocumentsRealtimeSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserDocumentsRealtimeSubscription({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useUserDocumentsRealtimeSubscription(baseOptions: Apollo.SubscriptionHookOptions<UserDocumentsRealtimeSubscription, UserDocumentsRealtimeSubscriptionVariables> & ({ variables: UserDocumentsRealtimeSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<UserDocumentsRealtimeSubscription, UserDocumentsRealtimeSubscriptionVariables>(UserDocumentsRealtimeDocument, options);
-      }
-export type UserDocumentsRealtimeSubscriptionHookResult = ReturnType<typeof useUserDocumentsRealtimeSubscription>;
-export type UserDocumentsRealtimeSubscriptionResult = Apollo.SubscriptionResult<UserDocumentsRealtimeSubscription>;
 export const GetUserIdDocument = gql`
     query GetUserId($email: String!) {
   users(where: {email: {_eq: $email}}) {
@@ -30344,33 +30296,3 @@ export type UserDataByIdQueryHookResult = ReturnType<typeof useUserDataByIdQuery
 export type UserDataByIdLazyQueryHookResult = ReturnType<typeof useUserDataByIdLazyQuery>;
 export type UserDataByIdSuspenseQueryHookResult = ReturnType<typeof useUserDataByIdSuspenseQuery>;
 export type UserDataByIdQueryResult = Apollo.QueryResult<UserDataByIdQuery, UserDataByIdQueryVariables>;
-export const UserDataRealtimeDocument = gql`
-    subscription UserDataRealtime($userId: uuid!) {
-  usersByPk(id: $userId) {
-    ...UserOverview
-  }
-}
-    ${UserOverviewFragmentDoc}`;
-
-/**
- * __useUserDataRealtimeSubscription__
- *
- * To run a query within a React component, call `useUserDataRealtimeSubscription` and pass it any options that fit your needs.
- * When your component renders, `useUserDataRealtimeSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUserDataRealtimeSubscription({
- *   variables: {
- *      userId: // value for 'userId'
- *   },
- * });
- */
-export function useUserDataRealtimeSubscription(baseOptions: Apollo.SubscriptionHookOptions<UserDataRealtimeSubscription, UserDataRealtimeSubscriptionVariables> & ({ variables: UserDataRealtimeSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<UserDataRealtimeSubscription, UserDataRealtimeSubscriptionVariables>(UserDataRealtimeDocument, options);
-      }
-export type UserDataRealtimeSubscriptionHookResult = ReturnType<typeof useUserDataRealtimeSubscription>;
-export type UserDataRealtimeSubscriptionResult = Apollo.SubscriptionResult<UserDataRealtimeSubscription>;

@@ -11,15 +11,3 @@ export const GET_USER_DOCUMENTS = gql`
     }
   }
 `;
-
-export const USER_DOCUMENTS_SUBSCRIPTION = gql`
-  subscription UserDocumentsRealtime($userId: uuid!) {
-    usersByPk(id: $userId) {
-      documentUsers {
-        document {
-          id
-        }
-      }
-    }
-  }
-`;

@@ -16,21 +16,18 @@ const defaultSettings: Settings = {
   local: {
     webUrl: import.meta.env.VITE_LOCAL_WEB_URL || "",
     hasuraHttpUrl: import.meta.env.VITE_LOCAL_HASURA_HTTP_URL || "",
-    hasuraWsUrl: import.meta.env.VITE_LOCAL_HASURA_WS_URL || "",
     adminSecret: import.meta.env.VITE_LOCAL_ADMIN_SECRET || "",
     myUserEmail: import.meta.env.VITE_LOCAL_MY_USER_EMAIL || "",
   },
   staging: {
     webUrl: import.meta.env.VITE_STAGING_WEB_URL || "",
     hasuraHttpUrl: import.meta.env.VITE_STAGING_HASURA_HTTP_URL || "",
-    hasuraWsUrl: import.meta.env.VITE_STAGING_HASURA_WS_URL || "",
     adminSecret: import.meta.env.VITE_STAGING_ADMIN_SECRET || "",
     myUserEmail: import.meta.env.VITE_STAGING_MY_USER_EMAIL || "",
   },
   production: {
     webUrl: import.meta.env.VITE_PRODUCTION_WEB_URL || "",
     hasuraHttpUrl: import.meta.env.VITE_PRODUCTION_HASURA_HTTP_URL || "",
-    hasuraWsUrl: import.meta.env.VITE_PRODUCTION_HASURA_WS_URL || "",
     adminSecret: import.meta.env.VITE_PRODUCTION_ADMIN_SECRET || "",
     myUserEmail: import.meta.env.VITE_PRODUCTION_MY_USER_EMAIL || "",
   },
@@ -39,7 +36,6 @@ const defaultSettings: Settings = {
 export type EnvironmentConfig = {
   webUrl: string;
   hasuraHttpUrl: string;
-  hasuraWsUrl: string;
   adminSecret: string;
   myUserEmail: string;
 };

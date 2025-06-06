@@ -35,12 +35,3 @@ export const GET_USER_OVERVIEW_BY_ID = gql`
   }
   ${USER_OVERVIEW_FRAGMENT}
 `;
-
-export const USER_CHANGES_SUBSCRIPTION = gql`
-  subscription UserDataRealtime($userId: uuid!) {
-    usersByPk(id: $userId) {
-      ...UserOverview
-    }
-  }
-  ${USER_OVERVIEW_FRAGMENT}
-`;

@@ -16,8 +16,12 @@ export const ToggleJoinDocument = ({
   accountId: string;
   isMember: boolean;
 }) => {
-  const [createDocumentUser] = useCreateDocumentUserMutation();
-  const [deleteDocumentUser] = useDeleteDocumentUserMutation();
+  const [createDocumentUser] = useCreateDocumentUserMutation({
+    refetchQueries: ["UserDataById", "UserDocuments"],
+  });
+  const [deleteDocumentUser] = useDeleteDocumentUserMutation({
+    refetchQueries: ["UserDataById", "UserDocuments"],
+  });
   const { userId } = useMyUserInfo();
 
   if (!userId) {
