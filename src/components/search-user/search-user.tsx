@@ -19,7 +19,7 @@ const SearchUser: React.FC = () => {
   });
 
   return (
-    <div className="px-4">
+    <div className="px-4 flex-1 flex flex-col min-h-0">
       <SearchBar
         search={search}
         searchType={searchType}

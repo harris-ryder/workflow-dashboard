@@ -1,15 +1,16 @@
-import { MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "../../../../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuLabel } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuContent } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenuTrigger } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
-import { DropdownMenu } from "../../../../../../ui/shadcn-primitives/dropdown-menu";
-import { Button } from "../../../../../../ui/shadcn-primitives/button";
 import type { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 import type { UserDocumentsItem } from "../../../../../../api-hooks/use-overview";
+import { Button } from "../../../../../../ui/shadcn-primitives/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../../../../ui/shadcn-primitives/dropdown-menu";
+import { ToggleJoinDocument } from "./toggle-join-document";
 
 export const columns: ColumnDef<UserDocumentsItem>[] = [
   {
@@ -38,24 +39,16 @@ export const columns: ColumnDef<UserDocumentsItem>[] = [
     header: "Document ID",
   },
   {
-    accessorKey: "account.isMyUserAccountMember",
-    header: "Account Member",
+    accessorKey: "document.isMyUserDocumentMember",
+    header: "Join Task",
     cell: ({ row }) => {
-      const isMember = row.original.account.isMyUserAccountMember;
-      const accountId = row.original.account.id;
-
       return (
-        <Button
-          variant={isMember ? "default" : "outline"}
-          size="sm"
-          onClick={() => {
-            // TODO: Implement mutation to toggle membership
-            // This would use the UpdateAccountUsers mutation
-            // with the accountId to toggle the membership status
-          }}
-        >
-          {isMember ? "Leave" : "Join"}
-        </Button>
+        <ToggleJoinDocument
+          userId={row.original.document.id}
+          documentId={row.original.document.id}
+          accountId={row.original.account.id}
+          isMember={row.original.document.isMyUserDocumentMember}
+        />
       );
     },
   },

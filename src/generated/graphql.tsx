@@ -30033,12 +30033,28 @@ export type VersionsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
-export type UserAccountsQueryVariables = Exact<{
+export type CreateDocumentUserMutationVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+  documentId: Scalars['uuid']['input'];
+  accountId: Scalars['uuid']['input'];
+}>;
+
+
+export type CreateDocumentUserMutation = { __typename?: 'mutation_root', insertDocumentUsersOne?: { __typename?: 'DocumentUsers', id: string } | null };
+
+export type UserDocumentsQueryVariables = Exact<{
   email?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type UserAccountsQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string } }> }> };
+export type UserDocumentsQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> }> };
+
+export type GetUserIdQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type GetUserIdQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'Users', id: string }> };
 
 export type UserOverviewFragment = { __typename?: 'Users', id: string, email: string, firstName?: string | null, lastName?: string | null, profilePictureUrl?: string | null, createdAt: string, lastSignInAt?: string | null, accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string, name: string, projects: Array<{ __typename?: 'Projects', id: string, name?: string | null, documents: Array<{ __typename?: 'Documents', id: string, name: string, slug: string }> }> } }> };
 
@@ -30082,11 +30098,48 @@ export const UserOverviewFragmentDoc = gql`
   }
 }
     `;
-export const UserAccountsDocument = gql`
-    query UserAccounts($email: String) {
+export const CreateDocumentUserDocument = gql`
+    mutation CreateDocumentUser($userId: uuid!, $documentId: uuid!, $accountId: uuid!) {
+  insertDocumentUsersOne(
+    object: {userId: $userId, documentId: $documentId, accountId: $accountId, guest: true}
+  ) {
+    id
+  }
+}
+    `;
+export type CreateDocumentUserMutationFn = Apollo.MutationFunction<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>;
+
+/**
+ * __useCreateDocumentUserMutation__
+ *
+ * To run a mutation, you first call `useCreateDocumentUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDocumentUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDocumentUserMutation, { data, loading, error }] = useCreateDocumentUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      documentId: // value for 'documentId'
+ *      accountId: // value for 'accountId'
+ *   },
+ * });
+ */
+export function useCreateDocumentUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>(CreateDocumentUserDocument, options);
+      }
+export type CreateDocumentUserMutationHookResult = ReturnType<typeof useCreateDocumentUserMutation>;
+export type CreateDocumentUserMutationResult = Apollo.MutationResult<CreateDocumentUserMutation>;
+export type CreateDocumentUserMutationOptions = Apollo.BaseMutationOptions<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>;
+export const UserDocumentsDocument = gql`
+    query UserDocuments($email: String) {
   users(where: {email: {_eq: $email}}) {
-    accountUsers {
-      account {
+    documentUsers {
+      document {
         id
       }
     }
@@ -30095,37 +30148,77 @@ export const UserAccountsDocument = gql`
     `;
 
 /**
- * __useUserAccountsQuery__
+ * __useUserDocumentsQuery__
  *
- * To run a query within a React component, call `useUserAccountsQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserAccountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserDocumentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserDocumentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserAccountsQuery({
+ * const { data, loading, error } = useUserDocumentsQuery({
  *   variables: {
  *      email: // value for 'email'
  *   },
  * });
  */
-export function useUserAccountsQuery(baseOptions?: Apollo.QueryHookOptions<UserAccountsQuery, UserAccountsQueryVariables>) {
+export function useUserDocumentsQuery(baseOptions?: Apollo.QueryHookOptions<UserDocumentsQuery, UserDocumentsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UserAccountsQuery, UserAccountsQueryVariables>(UserAccountsDocument, options);
+        return Apollo.useQuery<UserDocumentsQuery, UserDocumentsQueryVariables>(UserDocumentsDocument, options);
       }
-export function useUserAccountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserAccountsQuery, UserAccountsQueryVariables>) {
+export function useUserDocumentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserDocumentsQuery, UserDocumentsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UserAccountsQuery, UserAccountsQueryVariables>(UserAccountsDocument, options);
+          return Apollo.useLazyQuery<UserDocumentsQuery, UserDocumentsQueryVariables>(UserDocumentsDocument, options);
         }
-export function useUserAccountsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserAccountsQuery, UserAccountsQueryVariables>) {
+export function useUserDocumentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserDocumentsQuery, UserDocumentsQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<UserAccountsQuery, UserAccountsQueryVariables>(UserAccountsDocument, options);
+          return Apollo.useSuspenseQuery<UserDocumentsQuery, UserDocumentsQueryVariables>(UserDocumentsDocument, options);
         }
-export type UserAccountsQueryHookResult = ReturnType<typeof useUserAccountsQuery>;
-export type UserAccountsLazyQueryHookResult = ReturnType<typeof useUserAccountsLazyQuery>;
-export type UserAccountsSuspenseQueryHookResult = ReturnType<typeof useUserAccountsSuspenseQuery>;
-export type UserAccountsQueryResult = Apollo.QueryResult<UserAccountsQuery, UserAccountsQueryVariables>;
+export type UserDocumentsQueryHookResult = ReturnType<typeof useUserDocumentsQuery>;
+export type UserDocumentsLazyQueryHookResult = ReturnType<typeof useUserDocumentsLazyQuery>;
+export type UserDocumentsSuspenseQueryHookResult = ReturnType<typeof useUserDocumentsSuspenseQuery>;
+export type UserDocumentsQueryResult = Apollo.QueryResult<UserDocumentsQuery, UserDocumentsQueryVariables>;
+export const GetUserIdDocument = gql`
+    query GetUserId($email: String!) {
+  users(where: {email: {_eq: $email}}) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetUserIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserIdQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useGetUserIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables> & ({ variables: GetUserIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
+      }
+export function useGetUserIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
+        }
+export function useGetUserIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserIdQuery, GetUserIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserIdQuery, GetUserIdQueryVariables>(GetUserIdDocument, options);
+        }
+export type GetUserIdQueryHookResult = ReturnType<typeof useGetUserIdQuery>;
+export type GetUserIdLazyQueryHookResult = ReturnType<typeof useGetUserIdLazyQuery>;
+export type GetUserIdSuspenseQueryHookResult = ReturnType<typeof useGetUserIdSuspenseQuery>;
+export type GetUserIdQueryResult = Apollo.QueryResult<GetUserIdQuery, GetUserIdQueryVariables>;
 export const UserDataByEmailDocument = gql`
     query UserDataByEmail($email: String!) {
   users(where: {email: {_eq: $email}}) {

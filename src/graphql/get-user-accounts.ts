@@ -1,10 +1,10 @@
 import { gql } from "@apollo/client";
 
-export const GET_USER_ACCOUNTS = gql`
-  query UserAccounts($email: String) {
+export const GET_USER_DOCUMENTS = gql`
+  query UserDocuments($email: String) {
     users(where: { email: { _eq: $email } }) {
-      accountUsers {
-        account {
+      documentUsers {
+        document {
           id
         }
       }

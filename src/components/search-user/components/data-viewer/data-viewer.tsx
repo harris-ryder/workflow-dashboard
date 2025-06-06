@@ -14,7 +14,7 @@ export const DataViewer = ({
   customerDocumentData?: UserDocumentsItem[];
 }) => {
   return (
-    <div className="p-4 py-0 pb-4 border border-border rounded-lg">
+    <div className="p-4 py-0 pb-0 border border-border rounded-lg min-h-0">
       {customerUserData ? (
         <UserBar userData={customerUserData} />
       ) : (

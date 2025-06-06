@@ -1,7 +1,7 @@
 import {
-  useUserAccountsQuery,
   useUserDataByEmailQuery,
   useUserDataByIdQuery,
+  useUserDocumentsQuery,
   type UserDataByEmailQuery,
 } from "../generated/graphql";
 
@@ -32,7 +32,6 @@ export type UserDocumentsItem = {
   account: {
     id: AccountUser["account"]["id"];
     name: AccountUser["account"]["name"];
-    isMyUserAccountMember: boolean;
   };
   project: {
     id: Project["id"];
@@ -41,6 +40,7 @@ export type UserDocumentsItem = {
   document: {
     id: Document["id"];
     name: Document["name"];
+    isMyUserDocumentMember: boolean;
   };
 };
 
@@ -71,7 +71,7 @@ export const useOverview = ({
     skip: !customerId,
   });
 
-  const { data: myUserAccountsData } = useUserAccountsQuery({
+  const { data: myUserDocumentsData } = useUserDocumentsQuery({
     variables: {
       email: myUserEmail ?? "",
     },
@@ -82,9 +82,9 @@ export const useOverview = ({
   const customerDataLoading = customerEmail ? loadingEmail : loadingUserId;
   const customerDataError = customerEmail ? errorEmail : errorUserId;
 
-  const myUserAccountsIds =
-    myUserAccountsData?.users?.[0]?.accountUsers?.map(
-      (accountUser) => accountUser.account.id
+  const myUserDocumentsIds =
+    myUserDocumentsData?.users?.[0]?.documentUsers?.map(
+      (documentUser) => documentUser.document.id
     ) ?? [];
 
   const customerUserData = customerData?.users?.[0]
@@ -106,9 +106,6 @@ export const useOverview = ({
           account: {
             id: accountUsers.account.id,
             name: accountUsers.account.name,
-            isMyUserAccountMember: myUserAccountsIds.includes(
-              accountUsers.account.id
-            ),
           },
           project: {
             id: project.id,
@@ -117,6 +114,7 @@ export const useOverview = ({
           document: {
             id: document.id,
             name: document.name,
+            isMyUserDocumentMember: myUserDocumentsIds.includes(document.id),
           },
         }))
       )

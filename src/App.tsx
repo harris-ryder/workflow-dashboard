@@ -39,7 +39,7 @@ function AppContent() {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <div className="w-screen h-screen">
+        <div className="w-screen h-screen flex flex-col">
           <Navbar />
           <SearchUser />
         </div>
