@@ -48,6 +48,7 @@ export const columns: ColumnDef<UserDocumentsItem>[] = [
         <ToggleJoinDocument
           documentId={row.original.document.id}
           accountId={row.original.account.id}
+          projectId={row.original.project.id}
           isMember={row.original.document.isMyUserDocumentMember}
         />
       );

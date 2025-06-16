@@ -3,8 +3,10 @@ import {
   useUserDocumentsQuery,
   useCreateAccountUserMutation,
   useCreateDocumentUserMutation,
+  useCreateProjectUserMutation,
   useDeleteAccountUserMutation,
   useDeleteDocumentUserMutation,
+  useDeleteProjectUserMutation,
 } from "../generated/graphql";
 import { useMyUserInfo } from "./use-my-user-info";
 import { useSettings } from "../contexts/settings-provider";
@@ -16,10 +18,16 @@ export const useMutationJoinDocument = () => {
   const [createDocumentUser] = useCreateDocumentUserMutation({
     refetchQueries: ["UserDataById", "UserDocuments"],
   });
+  const [createProjectUser] = useCreateProjectUserMutation({
+    refetchQueries: ["UserDataById", "UserDocuments"],
+  });
   const [deleteAccountUser] = useDeleteAccountUserMutation({
     refetchQueries: ["UserDataById", "UserDocuments"],
   });
   const [deleteDocumentUser] = useDeleteDocumentUserMutation({
+    refetchQueries: ["UserDataById", "UserDocuments"],
+  });
+  const [deleteProjectUser] = useDeleteProjectUserMutation({
     refetchQueries: ["UserDataById", "UserDocuments"],
   });
 
@@ -40,6 +48,14 @@ export const useMutationJoinDocument = () => {
     [accountUserData]
   );
 
+  const userProjectIds = useMemo(
+    () =>
+      accountUserData?.usersByPk?.projectUsers?.map(
+        (projectUser) => projectUser.project.id
+      ) ?? [],
+    [accountUserData]
+  );
+
   const userDocumentIds = useMemo(
     () =>
       accountUserData?.usersByPk?.documentUsers.map(
@@ -48,18 +64,36 @@ export const useMutationJoinDocument = () => {
     [accountUserData]
   );
 
+  const documentToProjectMap = useMemo(
+    () => {
+      const map = new Map<string, string>();
+      accountUserData?.usersByPk?.documentUsers.forEach((documentUser) => {
+        if (documentUser.document.project?.id) {
+          map.set(documentUser.document.id, documentUser.document.project.id);
+        }
+      });
+      return map;
+    },
+    [accountUserData]
+  );
+
   const joinDocument = useCallback(
     async ({
       userId,
       accountId,
       documentId,
+      projectId,
     }: {
       userId: string;
       accountId: string;
       documentId: string;
+      projectId?: string;
     }) => {
       try {
         const promises = [];
+
+        // Get project ID from document if not provided
+        const effectiveProjectId = projectId || documentToProjectMap.get(documentId);
 
         if (!userAccountIds.includes(accountId)) {
           promises.push(
@@ -68,6 +102,18 @@ export const useMutationJoinDocument = () => {
                 userId,
                 accountId,
                 email: environmentConfig.myUserEmail,
+              },
+            })
+          );
+        }
+
+        if (effectiveProjectId && !userProjectIds.includes(effectiveProjectId)) {
+          promises.push(
+            createProjectUser({
+              variables: {
+                userId,
+                projectId: effectiveProjectId,
+                accountId,
               },
             })
           );
@@ -94,7 +140,16 @@ export const useMutationJoinDocument = () => {
         return { success: false, error };
       }
     },
-    [createAccountUser, createDocumentUser, userAccountIds, userDocumentIds, environmentConfig.myUserEmail]
+    [
+      createAccountUser,
+      createDocumentUser,
+      createProjectUser,
+      userAccountIds,
+      userProjectIds,
+      userDocumentIds,
+      documentToProjectMap,
+      environmentConfig.myUserEmail,
+    ]
   );
 
   const leaveDocument = useCallback(
@@ -102,13 +157,18 @@ export const useMutationJoinDocument = () => {
       userId,
       accountId,
       documentId,
+      projectId,
     }: {
       userId: string;
       accountId: string;
       documentId: string;
+      projectId?: string;
     }) => {
       try {
         const promises = [];
+
+        // Get project ID from document if not provided
+        const effectiveProjectId = projectId || documentToProjectMap.get(documentId);
 
         // Only delete if user exists on the account
         if (userAccountIds.includes(accountId)) {
@@ -117,6 +177,18 @@ export const useMutationJoinDocument = () => {
               variables: {
                 userId,
                 accountId,
+              },
+            })
+          );
+        }
+
+        // Only delete if user exists on the project
+        if (effectiveProjectId && userProjectIds.includes(effectiveProjectId)) {
+          promises.push(
+            deleteProjectUser({
+              variables: {
+                userId,
+                projectId: effectiveProjectId,
               },
             })
           );
@@ -143,7 +215,15 @@ export const useMutationJoinDocument = () => {
         return { success: false, error };
       }
     },
-    [deleteAccountUser, deleteDocumentUser, userAccountIds, userDocumentIds]
+    [
+      deleteAccountUser,
+      deleteDocumentUser,
+      deleteProjectUser,
+      userAccountIds,
+      userProjectIds,
+      userDocumentIds,
+      documentToProjectMap,
+    ]
   );
 
   return { joinDocument, leaveDocument };

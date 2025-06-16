@@ -8,9 +8,17 @@ export const GET_USER_DOCUMENTS = gql`
           id
         }
       }
+      projectUsers {
+        project {
+          id
+        }
+      }
       documentUsers {
         document {
           id
+          project {
+            id
+          }
         }
       }
     }

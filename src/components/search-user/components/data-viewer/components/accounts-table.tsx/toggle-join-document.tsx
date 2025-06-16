@@ -7,10 +7,12 @@ import { toast } from "sonner";
 export const ToggleJoinDocument = ({
   documentId,
   accountId,
+  projectId,
   isMember,
 }: {
   documentId: string;
   accountId: string;
+  projectId: string;
   isMember: boolean;
 }) => {
   const { joinDocument, leaveDocument } = useMutationJoinDocument();
@@ -50,6 +52,7 @@ export const ToggleJoinDocument = ({
             userId: userId,
             documentId: documentId,
             accountId: accountId,
+            projectId: projectId,
           });
           
           if (result.success) {
@@ -64,6 +67,7 @@ export const ToggleJoinDocument = ({
           userId: userId,
           documentId: documentId,
           accountId: accountId,
+          projectId: projectId,
         });
         
         if (result.success) {

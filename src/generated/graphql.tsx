@@ -30118,6 +30118,18 @@ export type CreateDocumentUserMutationVariables = Exact<{
 
 export type CreateDocumentUserMutation = { __typename?: 'mutation_root', insertDocumentUsersOne?: { __typename?: 'DocumentUsers', id: string } | null };
 
+export type CreateProjectUserMutationVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+  projectId: Scalars['uuid']['input'];
+  accountId: Scalars['uuid']['input'];
+  guest?: InputMaybe<Scalars['Boolean']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamp']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamp']['input']>;
+}>;
+
+
+export type CreateProjectUserMutation = { __typename?: 'mutation_root', insertProjectUsersOne?: { __typename?: 'ProjectUsers', id: string } | null };
+
 export type DeleteAccountUserMutationVariables = Exact<{
   userId: Scalars['uuid']['input'];
   accountId: Scalars['uuid']['input'];
@@ -30134,12 +30146,20 @@ export type DeleteDocumentUserMutationVariables = Exact<{
 
 export type DeleteDocumentUserMutation = { __typename?: 'mutation_root', deleteDocumentUsers?: { __typename?: 'DocumentUsersMutationResponse', affectedRows: number } | null };
 
+export type DeleteProjectUserMutationVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+  projectId: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteProjectUserMutation = { __typename?: 'mutation_root', deleteProjectUsers?: { __typename?: 'ProjectUsersMutationResponse', affectedRows: number } | null };
+
 export type UserDocumentsQueryVariables = Exact<{
   userId: Scalars['uuid']['input'];
 }>;
 
 
-export type UserDocumentsQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string } }>, documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
+export type UserDocumentsQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string } }>, projectUsers: Array<{ __typename?: 'ProjectUsers', project: { __typename?: 'Projects', id: string } }>, documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string, project?: { __typename?: 'Projects', id: string } | null } }> } | null };
 
 export type GetUserIdQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -30262,6 +30282,46 @@ export function useCreateDocumentUserMutation(baseOptions?: Apollo.MutationHookO
 export type CreateDocumentUserMutationHookResult = ReturnType<typeof useCreateDocumentUserMutation>;
 export type CreateDocumentUserMutationResult = Apollo.MutationResult<CreateDocumentUserMutation>;
 export type CreateDocumentUserMutationOptions = Apollo.BaseMutationOptions<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>;
+export const CreateProjectUserDocument = gql`
+    mutation CreateProjectUser($userId: uuid!, $projectId: uuid!, $accountId: uuid!, $guest: Boolean = true, $createdAt: timestamp = "NOW()", $updatedAt: timestamp = "NOW()") {
+  insertProjectUsersOne(
+    object: {userId: $userId, projectId: $projectId, accountId: $accountId, guest: $guest, createdAt: $createdAt, updatedAt: $updatedAt}
+  ) {
+    id
+  }
+}
+    `;
+export type CreateProjectUserMutationFn = Apollo.MutationFunction<CreateProjectUserMutation, CreateProjectUserMutationVariables>;
+
+/**
+ * __useCreateProjectUserMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectUserMutation, { data, loading, error }] = useCreateProjectUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      projectId: // value for 'projectId'
+ *      accountId: // value for 'accountId'
+ *      guest: // value for 'guest'
+ *      createdAt: // value for 'createdAt'
+ *      updatedAt: // value for 'updatedAt'
+ *   },
+ * });
+ */
+export function useCreateProjectUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectUserMutation, CreateProjectUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectUserMutation, CreateProjectUserMutationVariables>(CreateProjectUserDocument, options);
+      }
+export type CreateProjectUserMutationHookResult = ReturnType<typeof useCreateProjectUserMutation>;
+export type CreateProjectUserMutationResult = Apollo.MutationResult<CreateProjectUserMutation>;
+export type CreateProjectUserMutationOptions = Apollo.BaseMutationOptions<CreateProjectUserMutation, CreateProjectUserMutationVariables>;
 export const DeleteAccountUserDocument = gql`
     mutation DeleteAccountUser($userId: uuid!, $accountId: uuid!) {
   deleteAccountUsers(
@@ -30338,6 +30398,42 @@ export function useDeleteDocumentUserMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteDocumentUserMutationHookResult = ReturnType<typeof useDeleteDocumentUserMutation>;
 export type DeleteDocumentUserMutationResult = Apollo.MutationResult<DeleteDocumentUserMutation>;
 export type DeleteDocumentUserMutationOptions = Apollo.BaseMutationOptions<DeleteDocumentUserMutation, DeleteDocumentUserMutationVariables>;
+export const DeleteProjectUserDocument = gql`
+    mutation DeleteProjectUser($userId: uuid!, $projectId: uuid!) {
+  deleteProjectUsers(
+    where: {userId: {_eq: $userId}, projectId: {_eq: $projectId}}
+  ) {
+    affectedRows
+  }
+}
+    `;
+export type DeleteProjectUserMutationFn = Apollo.MutationFunction<DeleteProjectUserMutation, DeleteProjectUserMutationVariables>;
+
+/**
+ * __useDeleteProjectUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteProjectUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProjectUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProjectUserMutation, { data, loading, error }] = useDeleteProjectUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useDeleteProjectUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteProjectUserMutation, DeleteProjectUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteProjectUserMutation, DeleteProjectUserMutationVariables>(DeleteProjectUserDocument, options);
+      }
+export type DeleteProjectUserMutationHookResult = ReturnType<typeof useDeleteProjectUserMutation>;
+export type DeleteProjectUserMutationResult = Apollo.MutationResult<DeleteProjectUserMutation>;
+export type DeleteProjectUserMutationOptions = Apollo.BaseMutationOptions<DeleteProjectUserMutation, DeleteProjectUserMutationVariables>;
 export const UserDocumentsDocument = gql`
     query UserDocuments($userId: uuid!) {
   usersByPk(id: $userId) {
@@ -30346,9 +30442,17 @@ export const UserDocumentsDocument = gql`
         id
       }
     }
+    projectUsers {
+      project {
+        id
+      }
+    }
     documentUsers {
       document {
         id
+        project {
+          id
+        }
       }
     }
   }
