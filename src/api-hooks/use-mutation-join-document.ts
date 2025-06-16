@@ -7,6 +7,7 @@ import {
   useDeleteDocumentUserMutation,
 } from "../generated/graphql";
 import { useMyUserInfo } from "./use-my-user-info";
+import { useSettings } from "../contexts/settings-provider";
 
 export const useMutationJoinDocument = () => {
   const [createAccountUser] = useCreateAccountUserMutation({
@@ -23,6 +24,7 @@ export const useMutationJoinDocument = () => {
   });
 
   const { userId } = useMyUserInfo();
+  const { environmentConfig } = useSettings();
 
   // Check if account user exists
   const { data: accountUserData } = useUserDocumentsQuery({
@@ -65,6 +67,7 @@ export const useMutationJoinDocument = () => {
               variables: {
                 userId,
                 accountId,
+                email: environmentConfig.myUserEmail,
               },
             })
           );
@@ -91,7 +94,7 @@ export const useMutationJoinDocument = () => {
         return { success: false, error };
       }
     },
-    [createAccountUser, createDocumentUser, userAccountIds, userDocumentIds]
+    [createAccountUser, createDocumentUser, userAccountIds, userDocumentIds, environmentConfig.myUserEmail]
   );
 
   const leaveDocument = useCallback(
