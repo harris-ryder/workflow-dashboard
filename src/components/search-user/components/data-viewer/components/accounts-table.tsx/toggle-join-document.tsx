@@ -1,9 +1,6 @@
 import { useMyUserInfo } from "../../../../../../api-hooks/use-my-user-info";
+import { useMutationJoinDocument } from "../../../../../../api-hooks/use-mutation-join-document";
 import SettingsDialog from "../../../../../../dialogs/settings-dialog";
-import {
-  useCreateDocumentUserMutation,
-  useDeleteDocumentUserMutation,
-} from "../../../../../../generated/graphql";
 import { Button } from "../../../../../../ui/shadcn-primitives/button";
 import { toast } from "sonner";
 
@@ -16,12 +13,7 @@ export const ToggleJoinDocument = ({
   accountId: string;
   isMember: boolean;
 }) => {
-  const [createDocumentUser] = useCreateDocumentUserMutation({
-    refetchQueries: ["UserDataById", "UserDocuments"],
-  });
-  const [deleteDocumentUser] = useDeleteDocumentUserMutation({
-    refetchQueries: ["UserDataById", "UserDocuments"],
-  });
+  const { joinDocument, leaveDocument } = useMutationJoinDocument();
   const { userId } = useMyUserInfo();
 
   if (!userId) {
@@ -48,28 +40,37 @@ export const ToggleJoinDocument = ({
       variant={isMember ? "default" : "outline"}
       className="w-18"
       size="sm"
-      onClick={() => {
+      onClick={async () => {
         if (!userId) {
           return;
         }
 
         if (isMember) {
-          deleteDocumentUser({
-            variables: {
-              userId: userId ?? "",
-              documentId: documentId,
-            },
+          const result = await leaveDocument({
+            userId: userId,
+            documentId: documentId,
+            accountId: accountId,
           });
+          
+          if (result.success) {
+            toast.success("Successfully left the document");
+          } else {
+            toast.error("Failed to leave the document");
+          }
           return;
         }
 
-        createDocumentUser({
-          variables: {
-            userId: userId ?? "",
-            documentId: documentId,
-            accountId: accountId,
-          },
+        const result = await joinDocument({
+          userId: userId,
+          documentId: documentId,
+          accountId: accountId,
         });
+        
+        if (result.success) {
+          toast.success("Successfully joined the document");
+        } else {
+          toast.error("Failed to join the document");
+        }
       }}
     >
       {isMember ? "Leave" : "Join"}
