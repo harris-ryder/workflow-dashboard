@@ -1744,6 +1744,8 @@ export type Accounts = {
   lanes: Array<Lanes>;
   /** An aggregate relationship */
   lanesAggregate: LanesAggregate;
+  /** Feature flag for livesites screenshots. We cannot use PostHog because it works on the user level, whereas we need account level. So that clients of customers could use screenshots too */
+  livesitesScreenshotsEnabled: Scalars['Boolean']['output'];
   /** Contains a 1 or 2 word value for the marketing source */
   marketingSource?: Maybe<Scalars['String']['output']>;
   /** name of the workspace */
@@ -2095,6 +2097,7 @@ export type AccountsBoolExp = {
   labelsAggregate?: InputMaybe<LabelsAggregateBoolExp>;
   lanes?: InputMaybe<LanesBoolExp>;
   lanesAggregate?: InputMaybe<LanesAggregateBoolExp>;
+  livesitesScreenshotsEnabled?: InputMaybe<BooleanComparisonExp>;
   marketingSource?: InputMaybe<StringComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
   notifications?: InputMaybe<NotificationsBoolExp>;
@@ -2217,6 +2220,8 @@ export type AccountsInsertInput = {
   kanbanDisplaySettings?: InputMaybe<Scalars['jsonb']['input']>;
   labels?: InputMaybe<LabelsArrRelInsertInput>;
   lanes?: InputMaybe<LanesArrRelInsertInput>;
+  /** Feature flag for livesites screenshots. We cannot use PostHog because it works on the user level, whereas we need account level. So that clients of customers could use screenshots too */
+  livesitesScreenshotsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Contains a 1 or 2 word value for the marketing source */
   marketingSource?: InputMaybe<Scalars['String']['input']>;
   /** name of the workspace */
@@ -2643,6 +2648,7 @@ export type AccountsOrderBy = {
   kanbanDisplaySettings?: InputMaybe<OrderBy>;
   labelsAggregate?: InputMaybe<LabelsAggregateOrderBy>;
   lanesAggregate?: InputMaybe<LanesAggregateOrderBy>;
+  livesitesScreenshotsEnabled?: InputMaybe<OrderBy>;
   marketingSource?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   notificationsAggregate?: InputMaybe<NotificationsAggregateOrderBy>;
@@ -2740,6 +2746,8 @@ export enum AccountsSelectColumn {
   /** column name */
   KanbanDisplaySettings = 'kanbanDisplaySettings',
   /** column name */
+  LivesitesScreenshotsEnabled = 'livesitesScreenshotsEnabled',
+  /** column name */
   MarketingSource = 'marketingSource',
   /** column name */
   Name = 'name',
@@ -2800,6 +2808,8 @@ export enum AccountsSelectColumnAccountsAggregateBoolExpBool_AndArgumentsColumns
   /** column name */
   IsTimelineEnabled = 'isTimelineEnabled',
   /** column name */
+  LivesitesScreenshotsEnabled = 'livesitesScreenshotsEnabled',
+  /** column name */
   OfferDesktopNotifications = 'offerDesktopNotifications',
   /** column name */
   TimelineEnableRowNames = 'timelineEnableRowNames'
@@ -2819,6 +2829,8 @@ export enum AccountsSelectColumnAccountsAggregateBoolExpBool_OrArgumentsColumns 
   IsStorageEnabled = 'isStorageEnabled',
   /** column name */
   IsTimelineEnabled = 'isTimelineEnabled',
+  /** column name */
+  LivesitesScreenshotsEnabled = 'livesitesScreenshotsEnabled',
   /** column name */
   OfferDesktopNotifications = 'offerDesktopNotifications',
   /** column name */
@@ -2878,6 +2890,8 @@ export type AccountsSetInput = {
   isTimelineEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** check if used, potentially remove. Was used for global default kanban display settings */
   kanbanDisplaySettings?: InputMaybe<Scalars['jsonb']['input']>;
+  /** Feature flag for livesites screenshots. We cannot use PostHog because it works on the user level, whereas we need account level. So that clients of customers could use screenshots too */
+  livesitesScreenshotsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Contains a 1 or 2 word value for the marketing source */
   marketingSource?: InputMaybe<Scalars['String']['input']>;
   /** name of the workspace */
@@ -3036,6 +3050,8 @@ export type AccountsStreamCursorValueInput = {
   isTimelineEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** check if used, potentially remove. Was used for global default kanban display settings */
   kanbanDisplaySettings?: InputMaybe<Scalars['jsonb']['input']>;
+  /** Feature flag for livesites screenshots. We cannot use PostHog because it works on the user level, whereas we need account level. So that clients of customers could use screenshots too */
+  livesitesScreenshotsEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Contains a 1 or 2 word value for the marketing source */
   marketingSource?: InputMaybe<Scalars['String']['input']>;
   /** name of the workspace */
@@ -3155,6 +3171,8 @@ export enum AccountsUpdateColumn {
   IsTimelineEnabled = 'isTimelineEnabled',
   /** column name */
   KanbanDisplaySettings = 'kanbanDisplaySettings',
+  /** column name */
+  LivesitesScreenshotsEnabled = 'livesitesScreenshotsEnabled',
   /** column name */
   MarketingSource = 'marketingSource',
   /** column name */
@@ -10277,6 +10295,14 @@ export type LanesVarianceOrderBy = {
   position?: InputMaybe<OrderBy>;
 };
 
+export type LiveSitescreenshotInput = {
+  messageId: Scalars['String']['input'];
+  pageEvents: Array<PageEvent>;
+  scroll: Scroll;
+  url: Scalars['String']['input'];
+  viewport: Viewport;
+};
+
 /** @tagging a user creates a mention for that user and sends them a notification */
 export type Mentions = {
   __typename?: 'Mentions';
@@ -11573,6 +11599,10 @@ export type Messages = {
   resolverId?: Maybe<Scalars['uuid']['output']>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: Maybe<Scalars['Int']['output']>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: Maybe<Scalars['String']['output']>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: Maybe<Scalars['timestamp']['output']>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: Maybe<Scalars['String']['output']>;
   /** remove - old format for storing messages */
@@ -11872,6 +11902,8 @@ export type MessagesBoolExp = {
   resolver?: InputMaybe<UsersBoolExp>;
   resolverId?: InputMaybe<UuidComparisonExp>;
   screenWidth?: InputMaybe<IntComparisonExp>;
+  screenshotUrl?: InputMaybe<StringComparisonExp>;
+  screenshotUrlExpiresAt?: InputMaybe<TimestampComparisonExp>;
   shortLinkSlug?: InputMaybe<StringComparisonExp>;
   textJson?: InputMaybe<JsonbComparisonExp>;
   textJsonTiptap?: InputMaybe<JsonbComparisonExp>;
@@ -11996,6 +12028,10 @@ export type MessagesInsertInput = {
   resolverId?: InputMaybe<Scalars['uuid']['input']>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: InputMaybe<Scalars['Int']['input']>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: InputMaybe<Scalars['timestamp']['input']>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: InputMaybe<Scalars['String']['input']>;
   /** remove - old format for storing messages */
@@ -12059,6 +12095,10 @@ export type MessagesMaxFields = {
   resolverId?: Maybe<Scalars['uuid']['output']>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: Maybe<Scalars['Int']['output']>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: Maybe<Scalars['String']['output']>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: Maybe<Scalars['timestamp']['output']>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: Maybe<Scalars['String']['output']>;
   /** the ID of the root item that the item is on, typically a Document or for an on-asset comment, a Version */
@@ -12116,6 +12156,10 @@ export type MessagesMaxOrderBy = {
   resolverId?: InputMaybe<OrderBy>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: InputMaybe<OrderBy>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: InputMaybe<OrderBy>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: InputMaybe<OrderBy>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: InputMaybe<OrderBy>;
   /** the ID of the root item that the item is on, typically a Document or for an on-asset comment, a Version */
@@ -12174,6 +12218,10 @@ export type MessagesMinFields = {
   resolverId?: Maybe<Scalars['uuid']['output']>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: Maybe<Scalars['Int']['output']>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: Maybe<Scalars['String']['output']>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: Maybe<Scalars['timestamp']['output']>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: Maybe<Scalars['String']['output']>;
   /** the ID of the root item that the item is on, typically a Document or for an on-asset comment, a Version */
@@ -12231,6 +12279,10 @@ export type MessagesMinOrderBy = {
   resolverId?: InputMaybe<OrderBy>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: InputMaybe<OrderBy>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: InputMaybe<OrderBy>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: InputMaybe<OrderBy>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: InputMaybe<OrderBy>;
   /** the ID of the root item that the item is on, typically a Document or for an on-asset comment, a Version */
@@ -12306,6 +12358,8 @@ export type MessagesOrderBy = {
   resolver?: InputMaybe<UsersOrderBy>;
   resolverId?: InputMaybe<OrderBy>;
   screenWidth?: InputMaybe<OrderBy>;
+  screenshotUrl?: InputMaybe<OrderBy>;
+  screenshotUrlExpiresAt?: InputMaybe<OrderBy>;
   shortLinkSlug?: InputMaybe<OrderBy>;
   textJson?: InputMaybe<OrderBy>;
   textJsonTiptap?: InputMaybe<OrderBy>;
@@ -12383,6 +12437,10 @@ export enum MessagesSelectColumn {
   ResolverId = 'resolverId',
   /** column name */
   ScreenWidth = 'screenWidth',
+  /** column name */
+  ScreenshotUrl = 'screenshotUrl',
+  /** column name */
+  ScreenshotUrlExpiresAt = 'screenshotUrlExpiresAt',
   /** column name */
   ShortLinkSlug = 'shortLinkSlug',
   /** column name */
@@ -12535,6 +12593,10 @@ export type MessagesSetInput = {
   resolverId?: InputMaybe<Scalars['uuid']['input']>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: InputMaybe<Scalars['Int']['input']>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: InputMaybe<Scalars['timestamp']['input']>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: InputMaybe<Scalars['String']['input']>;
   /** remove - old format for storing messages */
@@ -12750,6 +12812,10 @@ export type MessagesStreamCursorValueInput = {
   resolverId?: InputMaybe<Scalars['uuid']['input']>;
   /** [on-asset comment][sites] the width of the screen when this comment was added */
   screenWidth?: InputMaybe<Scalars['Int']['input']>;
+  /** URL of the livesite screenshot */
+  screenshotUrl?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration date time of the livesite screenshot */
+  screenshotUrlExpiresAt?: InputMaybe<Scalars['timestamp']['input']>;
   /** Used to create a shorter URL that links to specific messages, such as workflow.design/c/a4dD4s */
   shortLinkSlug?: InputMaybe<Scalars['String']['input']>;
   /** remove - old format for storing messages */
@@ -12867,6 +12933,10 @@ export enum MessagesUpdateColumn {
   ResolverId = 'resolverId',
   /** column name */
   ScreenWidth = 'screenWidth',
+  /** column name */
+  ScreenshotUrl = 'screenshotUrl',
+  /** column name */
+  ScreenshotUrlExpiresAt = 'screenshotUrlExpiresAt',
   /** column name */
   ShortLinkSlug = 'shortLinkSlug',
   /** column name */
@@ -14319,6 +14389,13 @@ export enum OrderBy {
   DescNullsLast = 'DESC_NULLS_LAST'
 }
 
+export type PageEvent = {
+  srcElement: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+  x: Scalars['Int']['input'];
+  y: Scalars['Int']['input'];
+};
+
 export type PaidSubscription = {
   __typename?: 'PaidSubscription';
   seatSubscription: SeatSubscriptionDetails;
@@ -14627,8 +14704,6 @@ export type ProjectAndFolderOrganizers = {
   /** foreign key to project */
   childProjectId?: Maybe<Scalars['uuid']['output']>;
   createdAt: Scalars['timestamp']['output'];
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   lastModifiedVersion?: Maybe<Scalars['Int']['output']>;
   organizableId: Scalars['uuid']['output'];
@@ -14724,7 +14799,6 @@ export type ProjectAndFolderOrganizersBoolExp = {
   childProjectFolder?: InputMaybe<ProjectFoldersBoolExp>;
   childProjectId?: InputMaybe<UuidComparisonExp>;
   createdAt?: InputMaybe<TimestampComparisonExp>;
-  fractionalPosition?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   lastModifiedVersion?: InputMaybe<IntComparisonExp>;
   organizableId?: InputMaybe<UuidComparisonExp>;
@@ -14760,8 +14834,6 @@ export type ProjectAndFolderOrganizersInsertInput = {
   /** foreign key to project */
   childProjectId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamp']['input']>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastModifiedVersion?: InputMaybe<Scalars['Int']['input']>;
   organizableId?: InputMaybe<Scalars['uuid']['input']>;
@@ -14783,8 +14855,6 @@ export type ProjectAndFolderOrganizersMaxFields = {
   /** foreign key to project */
   childProjectId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamp']['output']>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   lastModifiedVersion?: Maybe<Scalars['Int']['output']>;
   organizableId?: Maybe<Scalars['uuid']['output']>;
@@ -14803,8 +14873,6 @@ export type ProjectAndFolderOrganizersMaxOrderBy = {
   /** foreign key to project */
   childProjectId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   lastModifiedVersion?: InputMaybe<OrderBy>;
   organizableId?: InputMaybe<OrderBy>;
@@ -14824,8 +14892,6 @@ export type ProjectAndFolderOrganizersMinFields = {
   /** foreign key to project */
   childProjectId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamp']['output']>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   lastModifiedVersion?: Maybe<Scalars['Int']['output']>;
   organizableId?: Maybe<Scalars['uuid']['output']>;
@@ -14844,8 +14910,6 @@ export type ProjectAndFolderOrganizersMinOrderBy = {
   /** foreign key to project */
   childProjectId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   lastModifiedVersion?: InputMaybe<OrderBy>;
   organizableId?: InputMaybe<OrderBy>;
@@ -14881,7 +14945,6 @@ export type ProjectAndFolderOrganizersOrderBy = {
   childProjectFolder?: InputMaybe<ProjectFoldersOrderBy>;
   childProjectId?: InputMaybe<OrderBy>;
   createdAt?: InputMaybe<OrderBy>;
-  fractionalPosition?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   lastModifiedVersion?: InputMaybe<OrderBy>;
   organizableId?: InputMaybe<OrderBy>;
@@ -14910,8 +14973,6 @@ export enum ProjectAndFolderOrganizersSelectColumn {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
-  FractionalPosition = 'fractionalPosition',
-  /** column name */
   Id = 'id',
   /** column name */
   LastModifiedVersion = 'lastModifiedVersion',
@@ -14937,8 +14998,6 @@ export type ProjectAndFolderOrganizersSetInput = {
   /** foreign key to project */
   childProjectId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamp']['input']>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastModifiedVersion?: InputMaybe<Scalars['Int']['input']>;
   organizableId?: InputMaybe<Scalars['uuid']['input']>;
@@ -15004,8 +15063,6 @@ export type ProjectAndFolderOrganizersStreamCursorValueInput = {
   /** foreign key to project */
   childProjectId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamp']['input']>;
-  /** Replaces position allows to order the organizers */
-  fractionalPosition?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   lastModifiedVersion?: InputMaybe<Scalars['Int']['input']>;
   organizableId?: InputMaybe<Scalars['uuid']['input']>;
@@ -15039,8 +15096,6 @@ export enum ProjectAndFolderOrganizersUpdateColumn {
   ChildProjectId = 'childProjectId',
   /** column name */
   CreatedAt = 'createdAt',
-  /** column name */
-  FractionalPosition = 'fractionalPosition',
   /** column name */
   Id = 'id',
   /** column name */
@@ -18018,6 +18073,11 @@ export type ReferralStats = {
   amountSaved: Scalars['String']['output'];
   paidAccounts: Scalars['Int']['output'];
   trialAccounts: Scalars['Int']['output'];
+};
+
+export type Scroll = {
+  x: Scalars['Int']['input'];
+  y: Scalars['Int']['input'];
 };
 
 export type SeatSubscriptionDetails = {
@@ -22212,15 +22272,6 @@ export type UuidComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
-export type ValidateUrlInput = {
-  url: Scalars['String']['input'];
-};
-
-export type ValidateUrlOutput = {
-  __typename?: 'ValidateUrlOutput';
-  isValid: Scalars['Boolean']['output'];
-};
-
 /** Each document (task) may have zero or more versions, which are individual or collections of creative assets */
 export type Versions = {
   __typename?: 'Versions';
@@ -23916,6 +23967,11 @@ export type VideoItemsVarianceFields = {
   width?: Maybe<Scalars['Float']['output']>;
 };
 
+export type Viewport = {
+  height: Scalars['Int']['input'];
+  width: Scalars['Int']['input'];
+};
+
 export type AccountInvoicesAggregateBoolExpBool_And = {
   arguments: AccountInvoicesSelectColumnAccountInvoicesAggregateBoolExpBool_AndArgumentsColumns;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
@@ -24546,6 +24602,7 @@ export type Mutation_Root = {
   insertVideoItems?: Maybe<VideoItemsMutationResponse>;
   /** insert a single row into the table: "video_items" */
   insertVideoItemsOne?: Maybe<VideoItems>;
+  takeLivesiteScreenshot?: Maybe<Scalars['Boolean']['output']>;
   /** update data of the table: "account_invoice_stripe_statuses" */
   updateAccountInvoiceStripeStatuses?: Maybe<AccountInvoiceStripeStatusesMutationResponse>;
   /** update single row of the table: "account_invoice_stripe_statuses" */
@@ -25972,6 +26029,12 @@ export type Mutation_RootInsertVideoItemsOneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootTakeLivesiteScreenshotArgs = {
+  input: LiveSitescreenshotInput;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdateAccountInvoiceStripeStatusesArgs = {
   _set?: InputMaybe<AccountInvoiceStripeStatusesSetInput>;
   where: AccountInvoiceStripeStatusesBoolExp;
@@ -27317,8 +27380,7 @@ export type Query_Root = {
   usersAggregate: UsersAggregate;
   /** fetch data from the table: "users" using primary key columns */
   usersByPk?: Maybe<Users>;
-  /** validateUrl */
-  validateUrl?: Maybe<ValidateUrlOutput>;
+  validateUrl?: Maybe<Scalars['Boolean']['output']>;
   /** An array relationship */
   versions: Array<Versions>;
   /** An aggregate relationship */
@@ -28283,7 +28345,7 @@ export type Query_RootUsersByPkArgs = {
 
 
 export type Query_RootValidateUrlArgs = {
-  args: ValidateUrlInput;
+  url: Scalars['String']['input'];
 };
 
 
@@ -30033,6 +30095,20 @@ export type VersionsAggregateBoolExpCount = {
   predicate: IntComparisonExp;
 };
 
+export type CreateAccountUserMutationVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+  accountId: Scalars['uuid']['input'];
+  firstName?: InputMaybe<Scalars['String']['input']>;
+  lastName?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<AccountUserRolesEnum>;
+  createdAt?: InputMaybe<Scalars['timestamp']['input']>;
+  updatedAt?: InputMaybe<Scalars['timestamp']['input']>;
+}>;
+
+
+export type CreateAccountUserMutation = { __typename?: 'mutation_root', insertAccountUsersOne?: { __typename?: 'AccountUsers', id: string } | null };
+
 export type CreateDocumentUserMutationVariables = Exact<{
   userId: Scalars['uuid']['input'];
   documentId: Scalars['uuid']['input'];
@@ -30041,6 +30117,14 @@ export type CreateDocumentUserMutationVariables = Exact<{
 
 
 export type CreateDocumentUserMutation = { __typename?: 'mutation_root', insertDocumentUsersOne?: { __typename?: 'DocumentUsers', id: string } | null };
+
+export type DeleteAccountUserMutationVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+  accountId: Scalars['uuid']['input'];
+}>;
+
+
+export type DeleteAccountUserMutation = { __typename?: 'mutation_root', deleteAccountUsers?: { __typename?: 'AccountUsersMutationResponse', affectedRows: number, returning: Array<{ __typename?: 'AccountUsers', id: string, email?: string | null }> } | null };
 
 export type DeleteDocumentUserMutationVariables = Exact<{
   userId: Scalars['uuid']['input'];
@@ -30055,7 +30139,7 @@ export type UserDocumentsQueryVariables = Exact<{
 }>;
 
 
-export type UserDocumentsQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
+export type UserDocumentsQuery = { __typename?: 'query_root', usersByPk?: { __typename?: 'Users', accountUsers: Array<{ __typename?: 'AccountUsers', account: { __typename?: 'Accounts', id: string } }>, documentUsers: Array<{ __typename?: 'DocumentUsers', document: { __typename?: 'Documents', id: string } }> } | null };
 
 export type GetUserIdQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -30099,6 +30183,48 @@ export const UserOverviewFragmentDoc = gql`
   }
 }
     `;
+export const CreateAccountUserDocument = gql`
+    mutation CreateAccountUser($userId: uuid!, $accountId: uuid!, $firstName: String = null, $lastName: String = null, $email: String = null, $role: AccountUserRolesEnum = TEAMMATE, $createdAt: timestamp = "NOW()", $updatedAt: timestamp = "NOW()") {
+  insertAccountUsersOne(
+    object: {userId: $userId, accountId: $accountId, firstName: $firstName, lastName: $lastName, email: $email, role: $role, createdAt: $createdAt, updatedAt: $updatedAt}
+  ) {
+    id
+  }
+}
+    `;
+export type CreateAccountUserMutationFn = Apollo.MutationFunction<CreateAccountUserMutation, CreateAccountUserMutationVariables>;
+
+/**
+ * __useCreateAccountUserMutation__
+ *
+ * To run a mutation, you first call `useCreateAccountUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAccountUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAccountUserMutation, { data, loading, error }] = useCreateAccountUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      accountId: // value for 'accountId'
+ *      firstName: // value for 'firstName'
+ *      lastName: // value for 'lastName'
+ *      email: // value for 'email'
+ *      role: // value for 'role'
+ *      createdAt: // value for 'createdAt'
+ *      updatedAt: // value for 'updatedAt'
+ *   },
+ * });
+ */
+export function useCreateAccountUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateAccountUserMutation, CreateAccountUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAccountUserMutation, CreateAccountUserMutationVariables>(CreateAccountUserDocument, options);
+      }
+export type CreateAccountUserMutationHookResult = ReturnType<typeof useCreateAccountUserMutation>;
+export type CreateAccountUserMutationResult = Apollo.MutationResult<CreateAccountUserMutation>;
+export type CreateAccountUserMutationOptions = Apollo.BaseMutationOptions<CreateAccountUserMutation, CreateAccountUserMutationVariables>;
 export const CreateDocumentUserDocument = gql`
     mutation CreateDocumentUser($userId: uuid!, $documentId: uuid!, $accountId: uuid!) {
   insertDocumentUsersOne(
@@ -30136,6 +30262,46 @@ export function useCreateDocumentUserMutation(baseOptions?: Apollo.MutationHookO
 export type CreateDocumentUserMutationHookResult = ReturnType<typeof useCreateDocumentUserMutation>;
 export type CreateDocumentUserMutationResult = Apollo.MutationResult<CreateDocumentUserMutation>;
 export type CreateDocumentUserMutationOptions = Apollo.BaseMutationOptions<CreateDocumentUserMutation, CreateDocumentUserMutationVariables>;
+export const DeleteAccountUserDocument = gql`
+    mutation DeleteAccountUser($userId: uuid!, $accountId: uuid!) {
+  deleteAccountUsers(
+    where: {userId: {_eq: $userId}, accountId: {_eq: $accountId}}
+  ) {
+    affectedRows
+    returning {
+      id
+      email
+    }
+  }
+}
+    `;
+export type DeleteAccountUserMutationFn = Apollo.MutationFunction<DeleteAccountUserMutation, DeleteAccountUserMutationVariables>;
+
+/**
+ * __useDeleteAccountUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteAccountUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAccountUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAccountUserMutation, { data, loading, error }] = useDeleteAccountUserMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      accountId: // value for 'accountId'
+ *   },
+ * });
+ */
+export function useDeleteAccountUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAccountUserMutation, DeleteAccountUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAccountUserMutation, DeleteAccountUserMutationVariables>(DeleteAccountUserDocument, options);
+      }
+export type DeleteAccountUserMutationHookResult = ReturnType<typeof useDeleteAccountUserMutation>;
+export type DeleteAccountUserMutationResult = Apollo.MutationResult<DeleteAccountUserMutation>;
+export type DeleteAccountUserMutationOptions = Apollo.BaseMutationOptions<DeleteAccountUserMutation, DeleteAccountUserMutationVariables>;
 export const DeleteDocumentUserDocument = gql`
     mutation DeleteDocumentUser($userId: uuid!, $documentId: uuid!) {
   deleteDocumentUsers(
@@ -30175,6 +30341,11 @@ export type DeleteDocumentUserMutationOptions = Apollo.BaseMutationOptions<Delet
 export const UserDocumentsDocument = gql`
     query UserDocuments($userId: uuid!) {
   usersByPk(id: $userId) {
+    accountUsers {
+      account {
+        id
+      }
+    }
     documentUsers {
       document {
         id

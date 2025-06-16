@@ -11,6 +11,7 @@ export const OpenDocumentButton = ({
 
   const handleOpenDocument = () => {
     const documentUrl = `${environmentConfig.webUrl}/w/doc/${documentSlug}`;
+    console.log("documentUrl", documentUrl);
     window.open(documentUrl, "_blank");
   };
 
